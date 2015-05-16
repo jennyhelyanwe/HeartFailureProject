@@ -1,0 +1,104 @@
+ CMISS Version 2.1  ipmate File Version 2 
+ Heading: Elements created in Perl 
+  
+ Stresses in constitutive law are referred to [2]: 
+   (1) Reference (theta) coordinates 
+   (2) Body (fibre/transverse) coordinates 
+   (3) Body coordinates with active fibre stress 
+    3 
+ Specify whether the constitutive law is defined by [1]: 
+   (1) a Green strain energy function (hyperelastic) 
+   (2) a stress/strain-rate relation 
+   (3) Gauss point stresses (grid coupling) 
+    1 
+ Specify whether the strain energy W is given as a function of [3]: 
+   (1) the principal strain invariants 
+   (2) the principal extension ratios 
+   (3) the fibre & transverse strains 
+    3 
+ Specify the form of strain energy function W [3]: 
+   (1) Polynomial  in fibre and transverse normal strains 
+  (2) Exponential in fibre and transverse strains 
+   (3) Pole-zero in fibre and transverse strains 
+   (4) Fibre in fluid 
+   (5) Defined in subroutine USER53 
+    2 
+ Specify the form of exponential funtion[1]: 
+  (1) W=C1*exp(Q) where Q=2*C2*(Ef+Es+En)+C3*(Ef^2)+C4*(Es^2+En^2+2*Esn^2)+2*C5*(Efs^2+Enf^2) 
+  (2) Dr J.W. Holmes distributed fibre formulation 
+  (3) Tong & Fung skin function 
+  (4) W=C1*exp(Q) where Q=C2*Ef^2+C3*Es^2+C4*En^2+2*C5*Efs*Esf+2*C6*Efn*Enf+2*C7*Esn*Ens 
+    1 
+ Enter the number of constitutive law parameters [1]: 5 
+  
+ Specify whether the exponential  material parameter 1 is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 2.52212279287538 
+  
+ Specify whether the exponential  material parameter 2 is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 0 
+ 
+ Specify whether the exponential  material parameter 3 is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 8.60937380179457 
+  
+ Specify whether the exponential  material parameter 4 is [1]: 
+  (1) Constant spatiall 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 3.66592870916253
+ 
+ Specify whether the exponential  material parameter 5 is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 25.7671807349653
+  
+ Specify whether stress-free sarcomere extension ratios are [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+    1 
+ The value is [0.100E+01]: 0.10000E+01 
+  
+ Specify whether time delay (in secs) to activation is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+    1 
+ The value is [0.000E+00]: 0.00000E+00 
+  
+ Specify whether the density is [1]: 
+  (1) Constant spatially 
+  (2) Piecewise constant (defined by elements) 
+  (3) Piecewise linear   (defined by nodes) 
+  (4) Defined by Gauss points 
+  (5) Defined by Grid points 
+   1 
+ The value is [0.000E+00]: 0 

@@ -1,0 +1,16 @@
+ CMISS Version 2.1  ipcoup File Version 1
+ Heading:
+ 
+ Specify the problem setup  [1]:
+   (0) Reset
+   (1) Coupled saturated-unsaturated
+   (2) Coupled Laplace
+   (3) Coupled tree growth problem
+   (4) Fluid interface stability
+   (5) Coupled aerofoil flow & stress
+   (6) Boundary layer interface
+   (7) Coupled pressure on surface
+   (8) Coupled 1D and 2/3D grids
+   (9) Coupled tube flow and mechanics
+  (10) Cellular processes
+    7

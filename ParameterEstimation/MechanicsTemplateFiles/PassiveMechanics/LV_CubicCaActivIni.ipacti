@@ -1,0 +1,20 @@
+ CMISS Version 1.21 ipacti File Version 2
+ Heading: ipacti file. Calcium level: 0
+
+ Specify type of contraction model [1]:
+   (1) SS tension-length-Ca relation
+  *(2) Hill
+   (3) Fading memory
+   (4) Outer hair cell stiffness
+    1
+ Enter max isometric tension at ext.ratio=1 (Tref) [100kPa]: 0.10000D+03
+ Enter non-dimensional slope parameter (beta) [1.45]: 0.14500D+01
+ Enter c50 for [Ca]i saturation curve (0<c<1) [0.5]: 0.50000D+00
+ Enter Hill coeff. for [Ca]i saturation curve (h) [3.0]: 0.30000D+01
+ Enter max [Ca]i (Ca_max) [1]: 0.10000D+01
+ Specify whether the initial calcium level [Ca]i is [1]:
+  (1) Constant spatially
+  (2) Piecewise constant (defined by elements)
+  (3) Defined by Gauss points
+   1
+ Enter initial calcium level [Ca]i [0]:0
