@@ -1,0 +1,16 @@
+ CMISS Version 2.1  ipacti File Version 2
+ Heading: 
+ 
+ Specify type of contraction model [2]:
+   (1) SS tension-length-Ca relation (set Cai)
+   (2) Get active stress from cell/grid model  (e.g. Hunter/McCulloch/ter Keurs model)
+   (3) Enhance 2nd PKST by user-defined functions
+   (4) SS TCa-length relation (set TCa)
+    4
+ Enter non-dimensional slope parameter (beta) [1.45]: 0.14500E+01
+ Specify whether the initial tension level TCa is [1]:
+  (1) Constant spatially
+  (2) Piecewise constant (defined by elements)
+  (3) Defined by Gauss points
+   1
+ Enter initial tension level TCa [0]: 0.00000E+00

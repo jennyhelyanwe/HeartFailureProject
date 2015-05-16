@@ -1,0 +1,39 @@
+ CMISS Version 2.1  ipinit File Version 3
+ Heading:
+ 
+ Specify option for Xi(3) faces [1]:
+   (1) No pressure boundary conditions
+   (2) Boundary pressure increments entered
+    1
+ Specify option [1]:
+   (1) Initial displacements all zero
+   (2) Read in initial conditions
+   (3) Restart from previous solution
+    1
+ 
+ Dependent variable boundary conditions:
+ 
+ Dependent variable/equation number 1 :
+ Enter node #s/name [EXIT]: 0
+ 
+ Dependent variable/equation number 2 :
+ Enter node #s/name [EXIT]: 0
+ 
+ Dependent variable/equation number 3 :
+ Enter node #s/name [EXIT]: 0
+ 
+ Dependent variable/equation number 4 :
+ Enter node #s/name [EXIT]: 0
+ Enter element #s/name [EXIT]: 0
+ 
+ Force boundary conditions:
+ 
+ Dependent variable/equation number 1 :
+ Enter node #s/name [EXIT]: 0
+ 
+ Dependent variable/equation number 2 :
+ Enter node #s/name [EXIT]: 0
+ 
+ Dependent variable/equation number 3 :
+ Enter node #s/name [EXIT]: 0
+ Specify the gravity vector components [0,0,0]: 0.00000E+00  0.00000E+00  0.00000E+00

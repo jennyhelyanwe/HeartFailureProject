@@ -1,0 +1,79 @@
+ CMISS Version 2.1  ipequa File Version 2
+ Heading: Elements created in Perl
+ 
+ Specify whether [1]:
+   (1) Static analysis
+   (2) Time integration
+   (3) Modal analysis
+   (4) Quasi-static analysis
+   (5) Wavefront path analysis
+   (6) Buckling analysis
+    1
+ Specify equation [1]:
+   (1) Linear elasticity
+   (2) Finite elasticity
+   (3) Laplace equation
+   (4) Helmholtz equation
+   (5) div(k.grad(u))=f
+   (6) Linear 2nd order elliptic
+   (7) Maxwells equations
+   (8) Fluid mechanics
+   (9) Oxygen transport
+    2
+ Specify problem type [1]:
+   (1) Plane stress
+   (2) Plane strain
+   (3) 3-dimensional
+   (4) Membrane theory
+   (5) String theory
+  *(6) Shell theory
+    3
+ Specify whether the dependent variables are [1]:
+   (1) Geometric coordinates
+   (2) Displacements
+    1
+ Specify whether solution is by [1]:
+   (1) Galerkin finite elements
+   (2) Direct boundary elements
+   (3) Finite Difference
+   (4) Collocation
+   (5) Finite volume technique
+   (6) Grid-based Finite Element
+   (7) Grid-based Finite Volume
+    1
+ Specify whether [2]:
+   (1) Linear analysis
+   (2) Nonlinear analysis
+    2
+ Specify whether [1]:
+   (1) Nonlinear equation
+   (2) Nonlinear bdry conditions
+    1
+ Specify whether the material is [2]:
+   (1) Compressible
+   (2) Incompressible
+   (3) Incomp + fluid
+   (4) Compressible + fluid
+   (5) Incomp + inextensible
+   (6) Compressible + fluid for lung
+   (7) Compressible + face pressure bcs
+    2
+ 
+ Is the basis function type for dependent variable 1
+ different in each element [N]? N
+ The basis type number is [1]: 1
+ 
+ Is the basis function type for dependent variable 2
+ different in each element [N]? N
+ The basis type number is [1]: 1
+ 
+ Is the basis function type for dependent variable 3
+ different in each element [N]? N
+ The basis type number is [1]: 1
+ 
+ Is the basis function type for dependent variable 4
+ different in each element [N]? N
+ The basis type number is [1]: 3
+ 
+ Do you want the global matrices stored as sparse matrices [Y]? N
+ Does this problem involve contact mechanics [N]? N

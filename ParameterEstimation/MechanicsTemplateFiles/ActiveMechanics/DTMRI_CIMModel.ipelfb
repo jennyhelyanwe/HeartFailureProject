@@ -1,0 +1,100 @@
+ CMISS Version 2.1  ipelfb File Version 1
+ Heading:
+ 
+ The number of elements is [   16]:    16
+ 
+ Element number [    1]:     1
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     1     1     2     3    18    18    19    20
+ 
+ Element number [    2]:     2
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     1     1     3     4    18    18    20    21
+ 
+ Element number [    3]:     3
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     1     1     4     5    18    18    21    22
+ 
+ Element number [    4]:     4
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     1     1     5     2    18    18    22    19
+ 
+ Element number [    5]:     5
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     2     3     6     7    19    20    23    24
+ 
+ Element number [    6]:     6
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     3     4     7     8    20    21    24    25
+ 
+ Element number [    7]:     7
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     4     5     8     9    21    22    25    26
+ 
+ Element number [    8]:     8
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     5     2     9     6    22    19    26    23
+ 
+ Element number [    9]:     9
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     6     7    10    11    23    24    27    28
+ 
+ Element number [   10]:    10
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     7     8    11    12    24    25    28    29
+ 
+ Element number [   11]:    11
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     8     9    12    13    25    26    29    30
+ 
+ Element number [   12]:    12
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:     9     6    13    10    26    23    30    27
+ 
+ Element number [   13]:    13
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:    10    11    14    15    27    28    31    32
+ 
+ Element number [   14]:    14
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:    11    12    15    16    28    29    32    33
+ 
+ Element number [   15]:    15
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:    12    13    16    17    29    30    33    34
+ 
+ Element number [   16]:    16
+ The basis function type for the fibre angle is [1]:  1
+ The basis function type for the imbrication angle is [1]:  1
+ The basis function type for the sheet angle is [1]:  1
+ Enter the 8 numbers for basis 1 [prev]:    13    10    17    14    30    27    34    31

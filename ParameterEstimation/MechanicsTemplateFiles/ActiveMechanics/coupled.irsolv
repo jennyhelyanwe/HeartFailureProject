@@ -1,0 +1,81 @@
+ CMISS Version 2.1  irsolv File Version 3
+ Heading:
+ 
+ Total number of regions :  2
+ 
+ Region number :  1
+ Specify type of equilibrium iteration [1]:
+   (1) Newton-Raphson  (full update at every iter.)
+   (2) Modified Newton (with adaptive full update)
+   (3) BFGS inverse    (with adaptive rank 2 update)
+   (4) Sequential quadratic programming (E04UPF)
+    1
+ Specify line search option [1]:
+   (1) No search
+   (2) Linear search
+    1
+ Specify the convergence criteria [1]:
+   (1) Sum of differentiated ratios of unconstrained to constrained residuals
+   (2) Ratio of unconstrained residuals to maximum Gauss point value
+   (3) Ratio of sum of unconstrained residuals to sum of constrained residuals
+   (4) Normalised scalar product of residuals and solution increments
+    4
+ Do you want to use parallel element stiffness computations [N]? N
+ Specify derivative calculation method [2]:
+   (1) Algebraic
+   (2) One-sided finite differences
+   (3) Central finite differences
+    2
+ Specify depth of output required [1]:
+   (1) Equilibrium solution information only
+   (2) Intermediate solution information also
+    1
+ Specify type of output required [0]:
+   (0) Solver progress only
+   (1) Solution vectors
+   (2) Solution and residual vectors
+    0
+ Do you want to increment a material parameter [N]? N
+ Specify type of linear solution procedure [1]:
+   (1)  LU Decomposition
+   (2)  Single Value Decomposition
+   (3)  Least Squares
+   (4)  Cholesky Decomposition
+   (5)  Jacobi Iteration
+   (6)  Succesive Over Relaxation
+   (7)  Incomplete LU Decomposition(0)
+   (8)  Incomplete LU Decomposition(1)
+   (9)  Conjugate Gradient
+   (10) Biconjugate Gradient Stabilised
+   (11) Generalised Minimum Residual
+   (12) Black Box Multigrid (BOXMG)
+   (13) Preconditioned CG from BOXMG
+   (14) Algebraic Multigrid (AMG1R6)
+    1
+ Do you want the solution matrix stored as a sparse matrix [Y]? N
+ Specify option for linear solution [0]:
+   (0) No output
+   (1) Timing and error check
+   (2) & Solver output
+   (3) & Global solution matrices
+   (4) & Global stiffness matrices
+   (5) & Element matrices
+    0
+ Enter the solution output frequency (0 for no output) [1]: 1
+ Specify option for solution matrices output [0]:
+   (0) No output
+   (1) Solution matrix
+   (2) RHS vector
+   (3) Solution matrix & RHS vector
+    0
+ 
+ Region number :  2
+ Specify depth of output required [1]:
+   (1) Equilibrium solution information only
+   (2) Intermediate solution information also
+    1
+ Specify type of output required [0]:
+   (0) Solver progress only
+   (1) Solution vectors
+   (2) Solution and residual vectors
+    0
