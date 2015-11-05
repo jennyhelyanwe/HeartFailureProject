@@ -123,7 +123,8 @@ legend('LVP-Average','LVP@MRI Frame');
 %% Convert pressure to kPa
 LVP.LVP_Average_Resampled(2,:)=LVP_MRI_Matched(2,:)*101.32/760;
 %% Find the minimum pressure (DS pressure) and offset the pressure
-LVP.LVP_Average_Resampled(3,:)=LVP.LVP_Average_Resampled(2,:)-min(LVP.LVP_Average_Resampled(2,:));
+LVP.LVP_Average_Resampled(3,:)=LVP.LVP_Average_Resampled(2,:);
+%LVP.LVP_Average_Resampled(3,:)=LVP.LVP_Average_Resampled(2,:)-min(LVP.LVP_Average_Resampled(2,:));
 
 %% Deal with discontinuity
 %LVP.LVP_Average_Resampled(3,:) = Peak_Interpolation(LVP.LVP_Average_Resampled(3,:), pre_discont, post_discont);

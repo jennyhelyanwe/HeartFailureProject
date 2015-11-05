@@ -78,12 +78,12 @@ if ($LV_P < 0)
 }
 
 print "\033[0;30;42mThis is going to take ".$MAXIMUM_INCREM." load step(s).\033[0m\n"
-
+$INCREM = 1/$MAXIMUM_INCREM;
+$p_increm = $INCREM*$LV_P
 for $i ( 1..$MAXIMUM_INCREM ) 
 {       
     print "\n\033[0;30;42mSolve load step number ".$i."\033[0m\n"
-	$INCREM = 1/$MAXIMUM_INCREM;
-	$p_increm = $INCREM*$LV_P
+	
 	print "\033[0;30;43m    Apply: pressure increment $p_increm kPa    \033[0m\n";
     print "\033[0;30;47m    Load step: $i out of $MAXIMUM_INCREM    \033[0m\n";
 	fem solve increment $INCREM iter $ITERS error $TOL region $WALL;
@@ -96,7 +96,7 @@ for $i ( 1..$MAXIMUM_INCREM )
 	$NAME="LVInflation_".${output_index};
 	$FILE=$outputDebug.${NAME};
 	fem define initial;w;$FILE region $WALL;
-
+	
 	# Export the model first
 	fem export nodes;$FILE field as LVInflation region $WALL;
 	fem export elements;$FILE field as LVInflation region $WALL;

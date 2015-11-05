@@ -9,7 +9,7 @@ fprintf('\n************ Start to analyse aortic pressure *************\n');
 temporal_spacing_Haemo=4;   % 4 ms between each haemodynamic measurement. 
 
 %% Enter the excel filename to be analysed (Aortic Pressure)
-study_name='Aortic_Pressure_Separate_Study/STF-20-MR-281281.xlsx';
+study_name='Aortic_Pressure_Separate_Study/STF-19-MR-276276.xlsx';
 AOPressure=ExtractAorticPressure(study_name, debug);
 % print the interval between peaks for aortic pressure trace
 fprintf('===== The duration between peak aortic pressure is %f ======\n',AOPressure.AOP_Average_HaemoTT(1,end));
@@ -19,7 +19,7 @@ fprintf('\n************ Start to analyse LV pressure *************\n');
 %}
 
 %% Enter the excel filename to be analysed (LV Pressure)
-study_name='LV_Pressure_Separate_Study/STF-20-MR-281281.xlsx';
+study_name='LV_Pressure_Separate_Study/STF-19-MR-276276.xlsx';
 LVPressure=ExtractLVPressure(study_name, debug);
 fprintf('===== The duration between peak LV pressure is %f ======\n',LVPressure.LVP_Average_HaemoTT(1,end));
 fprintf('\n***********************************************************\n');
@@ -89,8 +89,8 @@ non_zero_index=find(AOPressure.AOP_Average_HaemoTT(4,:)~=0);
 AOPressure.AOP_Average_Scaled=AOPressure.AOP_Average_HaemoTT(4,non_zero_index);
 plot(LVPressure.LVP_Average_HaemoTT(1,:),AOPressure.AOP_Average_Scaled,'c*');
 %}
-MRI_file='LV_Pressure_Separate_Study/STF-08_MRI_info.mat';
-study_name='STF_08';
+MRI_file='LV_Pressure_Separate_Study/STF-19_MRI_info.mat';
+study_name='STF_19';
 ExtractCavityVolume(MRI_file,LVPressure,study_name);
 
 return

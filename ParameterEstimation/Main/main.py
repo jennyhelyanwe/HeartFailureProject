@@ -32,15 +32,20 @@ def main_program(study_id, study_frame, debug_toggle, forward_solve_toggle, a_p_
     # 4. Run estimation: - passive parameter estimation
     #                    - active parameter estimation.
     ####################################################################################################################
-
     ## 1. Program set-up:
     # Set up directories for current study.
     setup_dir(study_id)
 
     # Set up log text file if needed.
     if debug_toggle == 1:
-        # Set up log file
-        setup_log_file(study_id, 'Output.log')
+        if a_p_toggle == 1:
+            # Set up log file
+            setup_log_file(study_id, 'Output_Passive.log')
+        elif a_p_toggle == 2:
+            setup_log_file(study_id, 'Output_Active.log')
+        else:
+            setup_log_file(study_id, 'Output_P_A.log')
+
 
     ## 2. Geometric set-up:
     # Set up reference model and cavity model of LV.
@@ -51,7 +56,7 @@ def main_program(study_id, study_frame, debug_toggle, forward_solve_toggle, a_p_
 
     ## 3. Mechanics simulation set-up:
     # Get pressure array.
-    pressure = bc_pressure_get(study_id)
+    pressure = bc_pressure_get(study_id, study_frame)
 
     # Get data indices for applying BC.
     data_idx = bc_displacement_get(study_id)
@@ -66,35 +71,41 @@ def main_program(study_id, study_frame, debug_toggle, forward_solve_toggle, a_p_
     elif a_p_toggle == 2:
         # Active parameter estimation only.
         optimise_active_main(study_id, study_frame, pressure, data_idx)
+        #active_sensitivity_evaluate(study_id, study_frame)
     elif a_p_toggle == 3:
         # Passive and active parameter estimations.
         optimise_passive_main(study_id, study_frame, pressure, data_idx, forward_solve_toggle)
         optimise_active_main(study_id, study_frame, pressure, data_idx)
+        #active_sensitivity_evaluate(study_id, study_frame)
 #
 #=======================================================================================================================
 #
-# Main commands begin here.
-os.system('rm *.*~')  # Remove all temporary files in Main folder.
+def main():
+    # Main commands begin here.
+    os.system('rm *.*~')  # Remove all temporary files in Main folder.
 
-# Top level control of the entire simulation:
-# Command line inputs:
-idx = int(sys.argv[1])  # Study number
-debug_toggle = int(sys.argv[2])  # Debug toggle: 1 - write output to text file Output.log, 0 - write output to terminal.
-forward_toggle = int(sys.argv[3])  # Forward solve toggle: 1 - do passive initial solve, 0 - don't do it.
-a_p_toggle = int(sys.argv[4])  # Run: 1. Passive only, 2. Active only, 3. Passive & active.
+    # Top level control of the entire simulation:
+    # Command line inputs:
+    idx = int(sys.argv[1])  # Study number
+    debug_toggle = int(sys.argv[2])  # Debug toggle: 1 - write output to text file Output.log, 0 - write output to terminal.
+    forward_toggle = int(sys.argv[3])  # Forward solve toggle: 1 - do passive initial solve, 0 - don't do it.
+    a_p_toggle = int(sys.argv[4])  # Run: 1. Passive only, 2. Active only, 3. Passive & active.
 
-# Extract the important frame numbers for all studies
-[study_id, study_frame] = setup_get_frames(idx)
+    # Extract the important frame numbers for all studies
+    [study_id, study_frame] = setup_get_frames(idx)
 
-# Output to screen
-print ''
-print '********************************************************'
-print '          Analysing study ' + study_id
-print '********************************************************'
-print ''
+    # Output to screen
+    print ''
+    print '********************************************************'
+    print '          Analysing study ' + study_id
+    print '********************************************************'
+    print ''
 
-# Run main program.
-main_program(study_id, study_frame, debug_toggle, forward_toggle, a_p_toggle)
+    # Run main program.
+    main_program(study_id, study_frame, debug_toggle, forward_toggle, a_p_toggle)
+
+if __name__ == '__main__':
+    main()
 
 
 

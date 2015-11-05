@@ -32,6 +32,8 @@ def mech_output_setup(dr, active_toggle):
 
     if not os.path.exists('WarmStartSolution'):
         os.mkdir('WarmStartSolution')  # Store ipinit solution files.
+    if not os.path.exists('ForwardSolveSolution'):
+        os.mkdir('ForwardSolveSolution')  # Store forward solve ipinit solution files.
 
     # Folders to store outputs after initial forward solve.
     if not os.path.exists('ForwardSolveExfile'):

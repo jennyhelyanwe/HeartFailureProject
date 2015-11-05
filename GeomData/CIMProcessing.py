@@ -250,16 +250,17 @@ print '      The total number of studies is', no_studies
 print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
 ######################### Process all studies ###################################
-for i in range(1, 2):
-    #for i in range(no_studies):
+for i in range(no_studies-3, no_studies-2):
+#for i in range(no_studies):
     current_study_name = study_ID[i]
-    current_study_frame = study_frame[i]
-    print
-    print ''
-    print '*****************************************************************'
-    print '          Current Study Name is ', current_study_name
-    print '*****************************************************************'
-    print ''
+    if current_study_name.find('MR')!= -1:
+	    current_study_frame = study_frame[i]
+	    print
+	    print ''
+	    print '*****************************************************************'
+	    print '          Current Study Name is ', current_study_name
+	    print '*****************************************************************'
+	    print ''
 
-    createSurfacePoints(current_study_name, current_study_frame)
+	    createSurfacePoints(current_study_name, current_study_frame)
 

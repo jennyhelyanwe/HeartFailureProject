@@ -495,6 +495,40 @@ sub changeCalcium_TCa
   return(1);
 } 
 
+sub changeCalcium_TCa_exclude_apex
+{
+  my ($Cactn,$ca_index) = @_;
+  my $outputFile = "output_debug/TCa_".$ca_index.".ipacti";
+  CORE::open(OUTFID, ">$outputFile") || die "Couldn't open $outputFile";
+  print OUTFID " CMISS Version 2.1 ipacti File Version 2\n";
+  print OUTFID " Heading: ipacti file. Calcium level: $CA\n";
+  print OUTFID "\n";
+  print OUTFID " Specify type of contraction model [1]:\n";
+  print OUTFID "   (1) SS tension-length-Ca relation (set Cai)\n";
+  print OUTFID "   (2) Get active stress from cell/grid model  (e.g. Hunter/McCulloch/ter Keurs model)\n";
+  print OUTFID "   (3) Enhance 2nd PKST by user-defined functions\n";
+  print OUTFID "   (4) SS TCa-length relation (set TCa)\n";
+  print OUTFID "    4\n";
+  print OUTFID " Enter non-dimensional slope parameter (beta) [1.45]: 0.14500E+01\n";
+  print OUTFID " Specify whether the initial tension level TCa is [1]:\n";
+  print OUTFID "  (1) Constant spatially\n";
+  print OUTFID "  (2) Piecewise constant (defined by elements)\n";
+  print OUTFID "  (3) Defined by Gauss points\n";
+  print OUTFID "   3\n";
+  print OUTFID " Enter element #s/name [EXIT]: 1..4\n";
+  print OUTFID " Gauss Point #s[EXIT]: 9..16, 25..32, 41..48, 57..64\n";
+  print OUTFID sprintf(" The value is [0.145E+01]: %f\n", $Cactn);
+  print OUTFID " Gauss Point #s[EXIT]: 0\n";
+  print OUTFID " Enter element #s/name [EXIT]: 5..16\n";
+  print OUTFID " Gauss Point #s[EXIT]: 1..64\n";
+  print OUTFID sprintf(" The value is [0.145E+01]: %f\n", $Cactn);
+  print OUTFID " Gauss Point #s[EXIT]: 0\n";
+  print OUTFID " Enter element #s/name [EXIT]: 0\n";
+  CORE::close(OUTFID);
+  print $CA, "\n";
+  return(1);
+}
+
 sub changeCalciumEspen_ESTCa
 {
   my ($Cactn) = @_;

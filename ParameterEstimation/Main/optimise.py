@@ -27,25 +27,31 @@ def optimise_passive_main(study_id, study_frame, pressure, node_idx, forward_sol
     ####################################################################################################################
 
     os.chdir(os.environ['STUDIES']+study_id+'/LVMechanics'+study_id+'/PassiveMechanics')
+    ## 0. Customise visualisation com files.
+    passive_visualisation_customise(study_id, study_frame)
+
+    ## 0. Calculate displacements using projection of surface data onto DS.
+    passive_displacement_mse(study_id, study_frame)
 
     ## 1. Initial forward solve, simulating inflation from DS to ED. The model predictions at each frame is saved in
     # ipinit format.
     if forward_solve_toggle == 1:
         # Initialise passive parameter
-        material_create_ipmate(5.0, 'LV_CubicGuc_TEMPLATE.ipmate', 'LV_CubicGuc.ipmate')
+        material_create_ipmate(4.0, 'LV_CubicGuc_TEMPLATE.ipmate', 'LV_CubicGuc.ipmate')
         # Do initial solve
         passive_initial_solve(study_id, study_frame, pressure, node_idx)
-
-    ## 2. Generate results files containing pressure, volume, endocardial and epicardial fitting errors at each frame
-    # from DS+1 to ED.
-    results_passive_generate(study_id, study_frame, 'ForwardSolve', 'ForwardSolve')
+        ## 2. Generate results files containing pressure, volume, endocardial and epicardial fitting errors at each frame
+        # from DS+1 to ED.
+        results_passive_generate(study_id, study_frame, 'ForwardSolve', 'ForwardSolve')
 
     ## 3. Optimise C1 to minimise summed fitting error for all frames from DS to ED.
     # Control bounds for C1 parameter.
     l_bound = 0.6
     u_bound = 20.0
     # Set initial guess for C1.
-    C1_init = [6.0]
+    C1_init = [4.0]
+    # Copy over forward solve solutions to current warm solve solution folder.
+    os.system('cp ForwardSolveSolution/*.* WarmStartSolution/.')
     # Use built-in python optimiser to estimate C1.
     C1_opt = fmin_l_bfgs_b(optimise_passive_obj_function, C1_init, approx_grad=1, bounds=[(l_bound, u_bound)],
                            epsilon=1e-2, args=[study_id, study_frame], factr=1e12)
@@ -54,13 +60,17 @@ def optimise_passive_main(study_id, study_frame, pressure, node_idx, forward_sol
     C1 = float(C1_opt[0][0])
     mse = optimise_passive_obj_function(C1, study_id, study_frame)
 
+    results_passive_generate(study_id, study_frame, 'Optimised', 'Optimised')
+
     # Output to log file.
     print 'LOG: Final Optimised Passive Parameter: ' + str(C1)
     print 'LOG: With total MSE of '+str(mse)
+
+    print 'LOG: Finished passive analysis. '
+
 #
 #=======================================================================================================================
 #
-
 
 def optimise_active_main(study_id, study_frame, pressure, node_idx):
     # This function estimates the transient of the bulk myocardial activation parameter TCa by estimating one TCa
@@ -75,6 +85,9 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
     #    d) Evaluate final optimised solution and fitting errors.
     # 4. Generate results text file.
     ####################################################################################################################
+
+    ## 0. Calculate displacements using projection of surface data onto DS model.
+    active_displacement_mse(study_id, study_frame)
 
     ## 1. Housekeeping, set up mechanics folders.
     # Get important frame numbers
@@ -94,8 +107,9 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
 
     # Initialise TCa
     os.chdir(dr)
-    copy('TCa_ZERO.ipacti', 'ForwardSolveActivation/TCa_'+str(ed)+'.ipacti')  # Zero activation at ED.
-    copy('TCa_ZERO.ipacti', 'OptimisedActivation/TCa_'+str(ed)+'.ipacti')  # Zero activation at ED.
+
+    copy('TCa_ZERO_exclude_apex.ipacti', 'ForwardSolveActivation/TCa_'+str(ed)+'.ipacti')  # Zero activation at ED.
+    copy('TCa_ZERO_exclude_apex.ipacti', 'OptimisedActivation/TCa_'+str(ed)+'.ipacti')  # Zero activation at ED.
 
     for i in range(0, len(idx)-1):
         ## a) Initial simulation using sensible guess for TCa parameter, saved model predictions in ipinit format.
@@ -116,7 +130,9 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
         data_next_epi = os.environ['GEOM_DATA']+study_id+'/Active/'+study_id+'_Surface_Points_Epi_'+str(idx[i+1])+'.ipdata'
         data_cur_endo = os.environ['GEOM_DATA']+study_id+'/Active/'+study_id+'_Surface_Points_Endo_'+str(idx[i])+'.ipdata'
         data_next_endo = os.environ['GEOM_DATA']+study_id+'/Active/'+study_id+'_Surface_Points_Endo_'+str(idx[i+1])+'.ipdata'
-        bc_displacement_set(node_idx, data_cur_epi, data_next_epi, data_cur_endo, data_next_endo,'LV_CubicPreEpiBase.ipinit')
+        filename = 'OptimisedExfile/LVContraction_'+str(idx[i])+'.exnode'
+        bc_displacement_set(node_idx, data_cur_epi, data_next_epi, data_cur_endo, data_next_endo,
+                            'LV_CubicPreEpiBase.ipinit', filename)
 
         # Get geometric data
         data_epi = os.environ['GEOM_DATA']+study_id+'/Active/'+study_id+'_Surface_Points_Epi_'+str(idx[i+1])+'.ipdata'
@@ -128,9 +144,9 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
         TCa = active_init_TCa(pressure, idx[i], idx[i+1])
 
         # Create new ipacti file
-        activation_create_ipacti(TCa, 'TCa_ZERO.ipacti', 'ForwardSolveActivation/TCa_'+str(idx[i+1])+'.ipacti')
-        copy('ForwardSolveActivation/TCa_'+str(idx[i+1])+'.ipacti', 'TCa_current.ipacti')
+        activation_create_ipacti_exclude_apex(TCa, 'TCa_ZERO_exclude_apex.ipacti', 'ForwardSolveActivation/TCa_'+str(idx[i+1])+'.ipacti')
 
+        copy('ForwardSolveActivation/TCa_'+str(idx[i+1])+'.ipacti', 'TCa_current.ipacti')
         copy('OptimisedActivation/TCa_'+str(idx[i])+'.ipacti', 'TCa_previous.ipacti')
 
         # Monitor CMISS solution.
@@ -143,12 +159,11 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
             finished = 0  # Default is unfinished.
             TCa_step = 4.0  # Default TCa step is 4.0 kPa.
 
-
             # Get TCa to start from.
             with open('TCa_previous.ipacti', 'r') as file:
                 data = file.readlines()
             if data[9].split()[1] == 'non-dimensional':
-                TCa_prev = float(data[15].split()[6])
+                TCa_prev = float(data[17].split()[-1])
             else:
                 TCa_prev = float(data[21].split()[4])
 
@@ -164,7 +179,7 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
 
             while converged == 0 and finished == 0:
                 # Run forward solve command file in forked process.
-                os.system('cm SolveInitialSystoleMF.com ->& ForwardSolve.log &')
+                os.system('cm SolveInitialSystoleMF_exclude_apex.com ->& ForwardSolve.log &')
                 print 'LOG: Solve to frame %d, waiting for forward solve to finish...\n' % (idx[i+1])
 
                 # Initialise current iteration as zero.
@@ -228,7 +243,7 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
                     active_set_load_step(TCa_step)
         elif CMISS_monitor == 0:
             # Run forward solve with no convergence monitoring.
-            os.system('cm SolveInitialSystoleMF.com')
+            os.system('cm SolveInitialSystoleMF_exclude_apex.com')
 
         print 'LOG: Forward solution has finished and is converged. \n'
         time.sleep(5)
@@ -242,7 +257,7 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
 
         ## c) Optimise TCa parameter for current frame to minimise fitting error at current frame.
         TCa_Opt = fmin_l_bfgs_b(optimise_active_obj_function, [TCa], args=[study_id, str(idx[i+1])], approx_grad=1,
-                                bounds=[(lb, ub)], factr=1e12, epsilon=0.5)
+                                bounds=[(lb, ub)], factr=1e12, epsilon=0.1)
 
         print 'TCa_Opt: ' + str(TCa_Opt)
 
@@ -250,15 +265,19 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
         TCa = float(TCa_Opt[0][0])
         mse = optimise_active_obj_function(TCa, study_id, str(idx[i+1]))
 
-        print 'LOG: Optimised Passive Parameter: '+ str(TCa)+ ' for frame '+str(idx[i+1])
-        print 'LOG: With total MSE of '+ str(mse)
+        print 'LOG: Optimised Passive Parameter: ' + str(TCa) + ' for frame '+str(idx[i+1])
+        print 'LOG: With total MSE of ' + str(mse)
 
     ## 4. Generate results text file.
-    results_active_generate(study_id, study_frame, 'Opt', 'Optimised')
+    results_active_generate(study_id, study_frame, 'Optimised', 'Optimised')
+
+    ## 5. Evaluate TCa sensitivity at each optimised frame.
+    active_sensitivity_evaluate(study_id, study_frame)
+
+    print 'LOG: Finished active analysis. '
 #
 #=======================================================================================================================
 #
-
 
 def optimise_passive_obj_function(C1, study_id, study_frame):
     # This function is the objective function which interfaces with the python optimiser for passive parameter
@@ -279,23 +298,19 @@ def optimise_passive_obj_function(C1, study_id, study_frame):
     ## 2. Re-run simulation using current C1 estimate and get new model predictions for each frame from DS+1 to ED.
     idx = passive_loop_index(study_frame)
     for i in range(1, len(idx)):
-        # Solve warm start using new C1 guess
+        # Solve warm start using new C1 guess - using non-registration of surface data.
         passive_warm_solve(study_id, str(idx[i]))
 
     ## 3. Evaluate MSE of fitting and sum for all frames from DS+1 to ED.
     toggle = 1  # Scalar objective value.
     mse = optimise_passive_obj_evaluate(idx, toggle)
 
-    ## 4. Generate results text files containing pressure, volume, endocardial and epicardial fitting errors.
-    results_name = datetime.now().strftime('%H:%M')
-    results_passive_generate(study_id, study_frame, results_name, 'Optimised')
-
     print 'LOG: Finished updating solutions with current C1 = '+str(C1)
     return mse
+
 #
 #=======================================================================================================================
 #
-
 
 def optimise_active_obj_function(TCa, study_id, frame_num):
     # This function is the objective function which interfaces with the python optimiser for active parameter
@@ -309,7 +324,7 @@ def optimise_active_obj_function(TCa, study_id, frame_num):
     print '\033[0;30;43m LOG: Optimising... Evaluate TCa = '+str(TCa)+'\033[0m\n'
     # Update TCa parameter
     copy('OptimisedActivation/TCa_'+str(frame_num)+'.ipacti', 'TCa_previous.ipacti')
-    activation_create_ipacti(TCa, 'TCa_ZERO.ipacti', 'TCa_current.ipacti')
+    activation_create_ipacti_exclude_apex(TCa, 'TCa_ZERO_exclude_apex.ipacti', 'TCa_current.ipacti')
 
     ## 2. Re-run simulation using current TCa estimate to get new model predictions for specified frame.
     active_warm_solve(study_id, frame_num)
@@ -319,10 +334,10 @@ def optimise_active_obj_function(TCa, study_id, frame_num):
 
     print 'LOG: Finished updating solutions with current TCa = ' + str(TCa)
     return mse
+
 #
 #=======================================================================================================================
 #
-
 
 def optimise_passive_obj_evaluate(idx, toggle):
     # This function extracts the MSE of fitting for both endocardial and epicardial surfaces for all frames from DS+1 to
@@ -356,10 +371,10 @@ def optimise_passive_obj_evaluate(idx, toggle):
     elif toggle == 2:
         mse = array(mse)
         return mse
+
 #
 #=======================================================================================================================
 #
-
 
 def optimise_active_obj_evaluate(frame_num):
     # This function extracts MSE of fitting for both endocardial and epicardial surfaces and returns MSE for specified
@@ -386,3 +401,4 @@ def optimise_active_obj_evaluate(frame_num):
 #
 #=======================================================================================================================
 #
+

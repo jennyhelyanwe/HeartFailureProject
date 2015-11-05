@@ -23,7 +23,10 @@ def reWriteExnodeToIpnode(current_study_name):
     ## Start to read CIM files
     for i in range(total_frame):
         ## Define the file name to be read
-        filename_exnode = ('model/' + current_study_name + '_' + str(i + 1) + '.model.exnode')
+        if os.path.exists('model/' + current_study_name + '_' + str(i + 1) + '.model.exnode'):
+            filename_exnode = ('model/' + current_study_name + '_' + str(i + 1) + '.model.exnode')
+        else:
+            filename_exnode = ('model/' + current_study_name + '_ZJW_' + str(i + 1) + '.model.exnode')
         ## Read in the CIM model parameters
         [focus, Nodal_Param_CIM] = readExnodeFile(filename_exnode)
         print ' **** Finished Reading nodal parameters for frame .......', i + 1

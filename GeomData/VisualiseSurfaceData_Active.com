@@ -2,10 +2,10 @@
 $DS = 16;
 $ED = 1;
 $tot = 25;
-
+$study = STF_01
 $t = 0
 for ($i = $ED;$i<=$DS; $i++){
-    gfx read data STF_17_Surface_Points_Epi_$i time $t region epi;
+    gfx read data ${study}/Active/${study}_Surface_Points_Epi_$i time $t region epi;
     $t = $t + 1;
 }
 
@@ -13,7 +13,7 @@ for ($i = $ED;$i<=$DS; $i++){
 
 $t = 0
 for ($i = $ED;$i<=$DS; $i++){
-    gfx read data STF_17_Surface_Points_Endo_$i time $t region endo;
+    gfx read data ${study}/Active/${study}_Surface_Points_Endo_$i time $t region endo;
     $t = $t + 1;
 }
 
@@ -22,10 +22,10 @@ for ($i = $ED;$i<=$DS; $i++){
 
 $t = 0
 for ($i = $ED;$i<=$DS; $i++){
-    gfx read node STF_17_$i time $t region model;
+    gfx read node ${study}_$i time $t region model;
     $t = $t + 1;
 }
-gfx read elem STF_17_$DS region model;
+gfx read elem ${study}_$DS region model;
 
 gfx modify g_element "/" general clear;
 gfx modify g_element /epi/ general clear;

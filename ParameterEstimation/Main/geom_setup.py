@@ -38,7 +38,7 @@ def geom_setup_ref_cavity(study_id, study_frame):
 
 
 def geom_setup_data(study_id, study_frame):
-    # This function copes reference model and important surface data points to mechanics working folder.
+    # This function copies reference model and important surface data points to mechanics working folder.
     # Get frame numbers
     ds, ed, es, tot = tuple(study_frame)
 

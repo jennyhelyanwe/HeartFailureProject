@@ -6,6 +6,7 @@ fem update geometry from solution region $WALL;
 ##################################### Epi ##############################
 # Define the undata (landmark points)
 fem define data;r;Surface_Points_Epi_ES region $WALL;	
+fem exp data;${outputDebug}."ES_Epi_nonreg" as nonreg region $WALL;
 
 fem export data;${error}."ES_Epi" as ES_Epi region $WALL;	
 #fem list data statistics
@@ -22,7 +23,7 @@ fem export data;${error}."EpiProjectionToES" as EpiProjectionToES error region $
 ##################################### Endo ##############################
 # Define the undata (landmark points)
 fem define data;r;Surface_Points_Endo_ES region $WALL;	
-	
+fem exp data;${outputDebug}."ES_Endo_nonreg" as nonreg region $WALL;
 	
 fem export data;${error}."ES_Endo" as ES_Endo region $WALL;	
 #fem list data statistics

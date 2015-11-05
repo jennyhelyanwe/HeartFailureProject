@@ -70,10 +70,10 @@ print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 print '      The total number of studies is', no_studies
 print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
-for i in range(1,2):
-    #for i in range(no_studies):
+#for i in range(1,2):
+for i in range(no_studies):
     current_study_name = all_files_list[i]
-	
+
     print ''
     print '*****************************************************************'
     print '          Current Study Name is ', current_study_name

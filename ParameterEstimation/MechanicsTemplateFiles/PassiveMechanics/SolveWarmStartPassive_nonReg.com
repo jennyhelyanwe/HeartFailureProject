@@ -18,7 +18,11 @@ print "\nPrevious C1 is ".${C1_previous}."\n"
 print "C1 goal is ".${C1_current}."\n"
 $C1_incr = $C1_current - $C1_previous;
 
-$no_steps = ceil(abs($C1_incr)/0.5)
+print "\n \033[0;30;42m ================================================================================== \033[0m\n";
+print "\033[0;30;42m       Solving iteratively from c1 = $C1_previous to reach c1 = $C1_current    	\033[0m\n";
+print "\033[0;30;42m ================================================================================== \033[0m\n";
+
+$no_steps = ceil(abs($C1_incr)/1.0)
 	
 if ($no_steps ==0) {
 	$no_steps = 1;
@@ -69,6 +73,10 @@ fem update gauss stress passive cauchy region $WALL;
 fem export gauss;${FILE}."_passive_gauss_stress" yg as gauss_stress region $WALL;
 fem update gauss stress active cauchy region $WALL;
 fem export gauss;${FILE}."_active_gauss_stress" yg as gauss_stress region $WALL;
+
+fem list stress;${output}."gauss_stress" full region $WALL;
+fem list strain;${output}."gauss_strain" full region $WALL;
+fem list stress;${output}."passive_gauss_stress" passive full region $WALL;
 
 # Update the cavity volume
 read commands;Extract_Pressure;

@@ -14,25 +14,29 @@ gfx create material silver normal_mode ambient 0.4 0.4 0.4 diffuse 0.7 0.7 0.7 e
 gfx create material tissue normal_mode ambient 0.9 0.7 0.5 diffuse 0.9 0.7 0.5 emission 0 0 0 specular 0.2 0.2 0.3 alpha 1 shininess 0.2;
 gfx create material transparent_gray50 normal_mode ambient 0.5 0.5 0.5 diffuse 0.5 0.5 0.5 emission 0.5 0.5 0.5 specular 0.5 0.5 0.5 alpha 0 shininess 0.2;
 gfx create material white normal_mode ambient 1 1 1 diffuse 1 1 1 emission 0 0 0 specular 0 0 0 alpha 1 shininess 0;
+gfx create spectrum error_spectrum;
+gfx modify spectrum error_spectrum clear overwrite_colour;
+gfx modify spectrum error_spectrum linear range 0.0007865 3 extend_above extend_below white_to_red colour_range 0 1 component 1;
 
+$DS = 23
 ######################## Visualise inflated models ##################
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
-	gfx read node;OptimisedExfile/LVInflation_$i time $t region model;
+	gfx read node;OptimisedExfile/LVContraction_$i time $t region model;
 	$t ++;
 	
 }
-gfx read elem;OptimisedExfile/LVInflation_2 region model;
+gfx read elem;OptimisedExfile/LVContraction_2 region model;
 gfx modify g_element model general clear circle_discretization 6 default_coordinate deformed element_discretization "12*12*12" native_discretization none;
 gfx modify g_element model lines select_on material default selected_material default_selected;
 gfx modify g_element model cylinders constant_radius 0.3 select_on material muscle selected_material default_selected render_shaded;
-gfx modify g_element model surfaces face xi3_1 select_on material muscle selected_material default_selected render_shaded;
+gfx modify g_element model surfaces face xi3_0 select_on material muscle selected_material default_selected render_shaded;
 
 ##################### Visualised ground truth surface points ############
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx read data;OptimisedExfile/Surface_endo_reg_$i time $t region endoReg;
 	$t ++;
@@ -42,7 +46,7 @@ gfx modify g_element endoReg/trans general clear circle_discretization 6 default
 gfx modify g_element endoReg/trans data_points glyph sphere general size "1*1*1" centre 0,0,0 font default select_on material green selected_material default_selected;
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1) 
+for ($i=2;$i<=$DS;$i=$i+1) 
 {
 	gfx read data;OptimisedExfile/Surface_epi_reg_$i time $t region epiReg;
 	$t ++;
@@ -52,7 +56,7 @@ gfx modify g_element epiReg/trans general clear circle_discretization 6 default_
 gfx modify g_element epiReg/trans data_points glyph sphere general size "1*1*1" centre 0,0,0 font default select_on material green selected_material default_selected;
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx read data;OptimisedExfile/Surface_epi_nonreg_$i time $t region Surface_Points_Epi ;
 	$t ++;
@@ -62,7 +66,7 @@ gfx modify g_element Surface_Points_Epi general clear circle_discretization 6 de
 gfx modify g_element Surface_Points_Epi data_points glyph sphere general size "1*1*1" centre 0,0,0 font default select_on material blue selected_material default_selected;
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx read data;OptimisedExfile/Surface_endo_nonreg_$i time $t region Surface_Points_Endo;
 	$t ++;
@@ -74,26 +78,28 @@ gfx modify g_element Surface_Points_Endo data_points glyph sphere general size "
 ################### Visualising error projections ##################
 gfx change data_offset 10000
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx read data;OptimisedError/EndoError_$i time $t region EndoError;
 	$t ++;
 	
 }
-gfx modify g_element EndoError general clear circle_discretization 6 default_coordinate coordinates element_discretization "4*4*4" native_discretization none;
-gfx modify g_element EndoError lines select_on material gold selected_material default_selected;
-gfx modify g_element EndoError data_points glyph arrow_solid general size "0.8*0.8*0.8" centre 0,0,0 font default orientation error scale_factors "1*0.5*0.5" select_on material gold selected_material default_selected;
+gfx def field EndoError/error_mag magnitude field error;
+gfx modify g_element /EndoError/ general clear;
+gfx modify g_element /EndoError/ lines domain_mesh1d coordinate coordinates tessellation temp4 LOCAL line line_base_size 0 select_on material gold selected_material default_selected render_shaded;
+gfx modify g_element /EndoError/ points domain_datapoints coordinate coordinates tessellation default_points LOCAL glyph arrow_solid size "0.8*0.8*0.8" offset 0,0,0 font default orientation error scale_factors "1*0.5*0.5" select_on material gold data error_mag spectrum error_spectrum selected_material default_selected render_shaded;
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx read data;OptimisedError/EpiError_$i time $t region EpiError;
 	$t ++;
 	
 }
-gfx modify g_element EpiError general clear circle_discretization 6 default_coordinate coordinates element_discretization "4*4*4" native_discretization none;
-gfx modify g_element EpiError lines select_on material gold selected_material default_selected;
-gfx modify g_element EpiError data_points glyph arrow_solid general size "0.8*0.8*0.8" centre 0,0,0 font default orientation error scale_factors "1*0.5*0.5" select_on material gold selected_material default_selected;
+gfx def field EpiError/error_mag magnitude field error;
+gfx modify g_element /EpiError/ general clear;
+gfx modify g_element /EpiError/ lines domain_mesh1d coordinate coordinates tessellation temp4 LOCAL line line_base_size 0 select_on material gold selected_material default_selected render_shaded;
+gfx modify g_element /EpiError/ points domain_datapoints coordinate coordinates tessellation default_points LOCAL glyph arrow_solid size "0.8*0.8*0.8" offset 0,0,0 font default orientation error scale_factors "1*0.5*0.5" select_on material gold data error_mag spectrum error_spectrum selected_material default_selected render_shaded;
 
 
 
@@ -107,7 +113,7 @@ gfx modify window 1 view parallel eye_point -51.6351 -224.288 -262.683 interest_
 gfx modify window 1 set transform_tool current_pane 1 std_view_angle 40 normal_lines no_antialias depth_of_field 0.0 fast_transparency blend_normal;
 
 $t = 0;
-for ($i=2;$i<=23;$i=$i+1)
+for ($i=2;$i<=$DS;$i=$i+1)
 {
 	gfx print jpg file OptimisedExfile/Image_$i window 1;
 	$t ++;

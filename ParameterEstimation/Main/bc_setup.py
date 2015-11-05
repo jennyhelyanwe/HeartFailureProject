@@ -6,11 +6,13 @@ import numpy
 from shutil import copy
 from scipy import array
 from util_surface_data import readIpdata
+import time
 
 # This python script contains functions which deal with pressure and displacement boundary conditions for mechanical
 # simulation.
 
-def bc_pressure_get(study_id):
+def bc_pressure_get(study_id, study_frame):
+    ds, ed, es, tot = tuple(study_frame)
     # This function gets the pressure at current frame from a specified text file.
     f = open(os.environ['HAEMO_DATA'] + study_id + '_registered_LVP.txt', 'r')
     pressure = []
@@ -18,6 +20,12 @@ def bc_pressure_get(study_id):
     while len(info) != 0:
         pressure.append(float(info.split()[1]))
         info = f.readline()
+
+    # Offset pressure with DS.
+    ds_p = float(pressure[int(ds)-1])
+    print ds_p
+    for i in range(0,len(pressure)):
+        pressure[i] = float(pressure[i]) - ds_p
     print 'LOG: Pressure BC for ' + study_id + ': ', pressure
     return pressure
 
@@ -87,12 +95,10 @@ def bc_displacement_get(study_id):
 
 
 def bc_displacement_set(node_idx, file_name_current_epi, file_name_next_epi, file_name_current_endo,
-                        file_name_next_endo, file_name_rw):
+                        file_name_next_endo, file_name_rw, file_name_current_model):
     # This function extracts the displacements of the surface data points closest to the basal nodes of the DS model.
     # Extract nodal displacements
     nodes = extract_nodal_disp(node_idx, file_name_current_epi, file_name_next_epi, file_name_current_endo, file_name_next_endo)
-    """
-    #nodes = [node31, node32, node33, node34]
     copy(file_name_rw, 'temp.ipinit')
 
     try:
@@ -103,53 +109,98 @@ def bc_displacement_set(node_idx, file_name_current_epi, file_name_next_epi, fil
         return
 
     temp = f_r.readline()
-    for component in [0,1,2]:
-        while temp != ' Enter node #s/name [EXIT]:    14\n':
-            f_w.write(temp)
-            temp = f_r.readline()
-        for i in range(0,4):
-            f_w.write(temp)
-            f_w.write(f_r.readline())
-            junk = f_r.readline()
-            f_w.write(' The increment is [0.0]:    '+str(nodes[i][component])+'\n')
-            for i in range(0,10):
-                f_w.write(f_r.readline())
-            temp = f_r.readline()
-    while temp != '':
-        f_w.write(temp)
-        temp = f_r.readline()
 
-    f_w.close()
-    f_r.close()
-    """
-    copy(file_name_rw, 'temp.ipinit')
-
-    try:
-        f_r = open('temp.ipinit', 'r')
-        f_w = open(file_name_rw, 'w')
-    except IOError:
-        print 'ERROR: bc_displacement_set: unable to open ', file_name_rw
-        return
-
-    temp = f_r.readline()
-    for component in [0,1,2]:
+    for component in [0, 1, 2]:
         while temp != ' Enter node #s/name [EXIT]:    31\n':
             f_w.write(temp)
             temp = f_r.readline()
-        for i in range(4,8):
-            f_w.write(temp)
-            f_w.write(f_r.readline())
-            junk = f_r.readline()
-            f_w.write(' The increment is [0.0]:    '+str(nodes[i][component])+'\n')
-            for i in range(0,10):
+        if component == 0:
+            # Match averaged x displacement to avoid apical swing of model.
+            base_coords = bc_nodal_base_coord_get(file_name_current_model)
+            mean_x = extract_ave_x_disp(node_idx, file_name_next_epi, base_coords)
+            for i in range(4, 8):
+                f_w.write(temp)
                 f_w.write(f_r.readline())
-            temp = f_r.readline()
+                junk = f_r.readline()
+                f_w.write(' The increment is [0.0]:    '+str(mean_x)+'\n')
+                for j in range(0,10):
+                    f_w.write(f_r.readline())
+                temp = f_r.readline()
+        else:
+            # Match y and z displacements exactly.
+            for i in range(4,8):
+                f_w.write(temp)
+                f_w.write(f_r.readline())
+                junk = f_r.readline()
+                f_w.write(' The increment is [0.0]:    '+str(nodes[i][component])+'\n')
+                for j in range(0,10):
+                    f_w.write(f_r.readline())
+                temp = f_r.readline()
     while temp != '':
         f_w.write(temp)
         temp = f_r.readline()
 
     f_w.close()
     f_r.close()
+    print 'LOG: Finished setting basal displacements'
+
+def bc_nodal_base_coord_get(filename):
+    ext = filename.split('.')[-1]
+    nodes = []
+    if ext == 'ipnode':
+        with open(filename, 'r') as f:
+            temp = f.readline()
+            while temp != ' Node number [    31]:     31\n':
+                temp = f.readline()
+            for i in range(0, 4):
+                coord = []
+                for j in range(0, 3):
+                    junk = f.readline()
+                    temp = f.readline()
+                    print temp.split()
+                    coord.append(float(temp.split()[-1]))
+                    for k in range(0, 7):
+                        junk = f.readline()
+                junk = f.readline()
+                junk = f.readline()
+                nodes.append(coord)
+            nodes = array(nodes)
+    elif ext == 'exnode':
+        # Get the coordinates of the basal nodes.
+        with open(filename, 'r') as f:
+            temp = f.readline()
+            fields = f.readline()
+            while temp != ' Node:           31\n':
+                temp = f.readline()
+            for i in range(0, 4):
+                coord = []
+                for j in range(0, 3):
+                    temp = f.readline()
+                    coord.append(float(temp.split()[0]))
+                    temp = f.readline()
+                if fields == ' #Fields=1\n':
+                    junk = f.readline()
+                else:
+                    for i in range(0, 8):
+                        junk = f.readline()
+                nodes.append(coord)
+        nodes = array(nodes)
+    return nodes
+
+def extract_ave_x_disp(Node_Data, fileNameNext_Epi, current_base_coords):
+    CAPEpi_def = readIpdata(fileNameNext_Epi)
+    ## Calculate the nodal displacement during inflation
+    Node31_x_def = CAPEpi_def[Node_Data[0], 0] - current_base_coords[0, 0] # x displacement measured against model.
+    Node32_x_def = CAPEpi_def[Node_Data[1], 0] - current_base_coords[1, 0]
+    Node33_x_def = CAPEpi_def[Node_Data[2], 0] - current_base_coords[2, 0]
+    Node34_x_def = CAPEpi_def[Node_Data[3], 0] - current_base_coords[3, 0]
+
+    x_def = array([Node31_x_def, Node32_x_def, Node33_x_def, Node34_x_def])
+    print x_def
+    mean_x = numpy.mean(x_def)
+    print 'LOG: Mean x displacement: ', str(mean_x)
+    time.sleep(5)
+    return mean_x
 
 
 def extract_nodal_indices(fileName_DS, fileName_surfaceDS_Epi, fileName_surfaceDS_Endo):
