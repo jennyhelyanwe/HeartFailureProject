@@ -179,7 +179,7 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
 
             while converged == 0 and finished == 0:
                 # Run forward solve command file in forked process.
-                os.system('cm SolveInitialSystoleMF_exclude_apex.com ->& ForwardSolve.log &')
+                os.system('cm SolveInitialSystoleMF.com ->& ForwardSolve.log &')
                 print 'LOG: Solve to frame %d, waiting for forward solve to finish...\n' % (idx[i+1])
 
                 # Initialise current iteration as zero.
@@ -243,7 +243,7 @@ def optimise_active_main(study_id, study_frame, pressure, node_idx):
                     active_set_load_step(TCa_step)
         elif CMISS_monitor == 0:
             # Run forward solve with no convergence monitoring.
-            os.system('cm SolveInitialSystoleMF_exclude_apex.com')
+            os.system('cm SolveInitialSystoleMF.com')
 
         print 'LOG: Forward solution has finished and is converged. \n'
         time.sleep(5)

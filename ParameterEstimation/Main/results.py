@@ -3,7 +3,6 @@ __author__ = 'zwan145'
 import os
 from passive_mechanics import *
 from active_mechanics import *
-from util_results import *
 
 def results_passive_generate(study_id, study_frame, name, status):
     # Copy optimised parameters to results folder

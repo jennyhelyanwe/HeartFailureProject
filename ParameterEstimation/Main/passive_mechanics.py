@@ -185,27 +185,31 @@ def passive_save_solutions(frame_num, ex_folder, error_folder, cavity_folder, st
 
 def passive_visualisation_customise(study_id, study_frame):
     ds, ed, es, tot = tuple(study_frame)
-
     os.chdir(os.environ['STUDIES']+study_id+'/LVMechanics'+study_id+'/PassiveMechanics')
-
     # Modify visualisation file to be specific to study frames of current study.
-    with open('ViewDisplacementMSE.com','r') as f:
+    with open('ViewDisplacementMSE.com', 'r') as f:
         filedata = f.read()
     tempdata = filedata.replace("$DS = 23", "$DS = "+ds)
     newdata = tempdata.replace("$tot = 30", "$tot = "+tot)
+    with open('ViewDisplacementMSE.com', 'w') as f:
+        f.write(newdata)
+
+    # Modify visualisation script for forward solve solutions.
+    with open('ViewForwardSolve.com', 'r') as f:
+        filedata = f.read()
+    tempdata = filedata.replace("$DS = 23", "$DS = "+ds)
+    newdata = tempdata.replace("$tot = 30", "$tot = "+tot)
+    with open('ViewForwardSolve.com', 'w') as f:
+        f.write(newdata)
 
     # Modify visualisation of optimised solution.
-    with open('ViewOptimisedModels.com','r') as f:
+    with open('ViewOptimisedModels.com', 'r') as f:
         filedata = f.read()
-    tempdata = filedata.replace("$DS = 23","$DS = "+ds)
+    tempdata = filedata.replace("$DS = 23", "$DS = "+ds)
     newdata = tempdata.replace("$tot = 30", "$tot = "+tot)
+    with open('ViewOptimisedModels.com', 'w') as f:
+        f.write(newdata)
 
-    # Modify visualisation of optimised solution.
-    with open('ViewForwardSolve.com','r') as f:
-        filedata = f.read()
-    tempdata = filedata.replace("$DS = 23","$DS = "+ds)
-    newdata = tempdata.replace("$tot = 30", "$tot = "+tot)
-    
 
 def passive_displacement_mse(study_id, study_frame):
     # This function projects each surface data frame in rapid filling diastole onto the diastasis geometry to quantify
@@ -216,7 +220,6 @@ def passive_displacement_mse(study_id, study_frame):
 
     if not os.path.exists('DisplacementMSE'):
         os.mkdir('DisplacementMSE')
-
 
     # Loop through all frames in passive portion of simulation
     idx = passive_loop_index(study_frame)
