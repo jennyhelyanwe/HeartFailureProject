@@ -54,7 +54,7 @@ def optimise_passive_main(study_id, study_frame, pressure, node_idx, forward_sol
     os.system('cp ForwardSolveSolution/*.* WarmStartSolution/.')
     # Use built-in python optimiser to estimate C1.
     C1_opt = fmin_l_bfgs_b(optimise_passive_obj_function, C1_init, approx_grad=1, bounds=[(l_bound, u_bound)],
-                           epsilon=1e-2, args=[study_id, study_frame], factr=1e12)
+                           epsilon=1e-2, args=(study_id, study_frame), factr=1e12)
     print C1_opt
     # Final solve using optimised C1 value.
     C1 = float(C1_opt[0][0])

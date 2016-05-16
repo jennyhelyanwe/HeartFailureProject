@@ -39,7 +39,7 @@ def setup_dir(study_id):
 
 def setup_get_frames(idx):
     # This function gets the specified study ID and important frame numbers.
-    filename = os.environ['PARAM_ESTIMATION'] + 'NYStFranFrameNumber.txt'
+    filename = os.environ['PARAM_ESTIMATION'] + '/StudyNames.txt'
     f = open(filename, 'r')
 
     study_ids = []
