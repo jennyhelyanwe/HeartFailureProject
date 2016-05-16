@@ -31,7 +31,7 @@ def optimise_passive_main(study_id, study_frame, pressure, node_idx, forward_sol
     passive_visualisation_customise(study_id, study_frame)
 
     ## 0. Calculate displacements using projection of surface data onto DS.
-    passive_displacement_mse(study_id, study_frame)
+    #passive_displacement_mse(study_id, study_frame)
 
     ## 1. Initial forward solve, simulating inflation from DS to ED. The model predictions at each frame is saved in
     # ipinit format.
