@@ -227,7 +227,7 @@ os.dup2(se.fileno(), sys.stderr.fileno())
 os.system('rm *.*~')
 
 ## Extract the important frame numbers for all studies
-file = open(os.environ['PARAM_ESTIMATION'] + 'NYStFranFrameNumber.txt', 'r')
+file = open(os.environ['PARAM_ESTIMATION'] + '/StudyNames.txt', 'r')
 
 study_ID = []
 study_frame_tmp = scipy.zeros((0, 3), int)
@@ -250,17 +250,17 @@ print '      The total number of studies is', no_studies
 print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
 ######################### Process all studies ###################################
-for i in range(no_studies-3, no_studies-2):
-#for i in range(no_studies):
+#for i in range(no_studies-3, no_studies-2):
+for i in range(no_studies):
     current_study_name = study_ID[i]
-    if current_study_name.find('MR')!= -1:
-	    current_study_frame = study_frame[i]
-	    print
-	    print ''
-	    print '*****************************************************************'
-	    print '          Current Study Name is ', current_study_name
-	    print '*****************************************************************'
-	    print ''
+    #if current_study_name.find('MR')!= -1:
+    current_study_frame = study_frame[i]
+    print
+    print ''
+    print '*****************************************************************'
+    print '          Current Study Name is ', current_study_name
+    print '*****************************************************************'
+    print ''
 
-	    createSurfacePoints(current_study_name, current_study_frame)
+    createSurfacePoints(current_study_name, current_study_frame)
 
