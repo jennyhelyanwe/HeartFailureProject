@@ -1,0 +1,20 @@
+ CMISS Version 2.1  ipcoor File Version 1
+ Heading:
+ 
+ The global coordinates for region 1 are [1]:
+   (1) rectangular cartesian (x,y,z)
+   (2) cylindrical polar (r,theta,z)
+   (3) spherical polar (r,theta,phi)
+   (4) prolate spheroidal (lambda,mu,theta)
+   (5) oblate  spheroidal (lambda,mu,theta)
+    4
+ Enter the number of global coordinates [2]: 3
+ Do you want to specify another coord. system for dependent variables [N]? N
+ 
+ Specify whether interpolation is in [1]:
+   (1) Lambda
+   (2) Focus^2.Sinh^2(Lambda)
+   (3) Focus^3.Cosh(Lambda).Sinh^2(Lambda)
+    1
+ Enter x,y,z origin of coords relative to region 0 [0,0,0]:0 0 0
+ Are there any non-standard mappings [N]? N
