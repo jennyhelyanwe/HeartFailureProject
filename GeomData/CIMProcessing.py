@@ -251,8 +251,7 @@ print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
 ######################### Process all studies ###################################
 #for i in range(no_studies-3, no_studies-2):
-#for i in range(no_studies):
-for i in range(2,no_studies):
+for i in range(no_studies):
     current_study_name = study_ID[i]
     #if current_study_name.find('MR')!= -1:
     current_study_frame = study_frame[i]
