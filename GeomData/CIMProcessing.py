@@ -38,6 +38,7 @@ def createSurfacePoints(current_study_name, current_study_frame):
     os.system('rm *.*')
     ## Get the current directory
     dst = os.getcwd()
+    
     ## Change to the folder where CMISS ipnode files are stored
     CIMModels_directory = ('../../CIM_Models/Studies/'+current_study_name+'/model_ipnode/')
     os.chdir(CIMModels_directory)
@@ -51,12 +52,12 @@ def createSurfacePoints(current_study_name, current_study_frame):
         filename, ext = os.path.splitext(file)
         if '_RC_Cubic' in filename:
             if ext == '.ipnode':
-                a = re.findall(r'\d+', filename)[1]
+                a = re.findall(r'\d+', filename)[-1]
                 dstfilename = dst + '/' + current_study_name + '_' + str(a) + '.ipnode'
                 copy(file, dstfilename)
                 numIpnode += 1
             elif ext == '.ipelem':
-                a = re.findall(r'\d+', filename)[1]
+                a = re.findall(r'\d+', filename)[-1]
                 dstfilename = dst + '/' + current_study_name + '_' + str(a) + '.ipelem'
                 copy(file, dstfilename)
                 numIpelem += 1
@@ -64,7 +65,6 @@ def createSurfacePoints(current_study_name, current_study_frame):
     ############## Step 2: Sort into Diastole and Systole folders #################
 
     ################## Active Frames #####################
-
     os.chdir(dst)
     if not os.path.exists('Active'):
         os.mkdir('Active')
@@ -251,7 +251,8 @@ print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
 ######################### Process all studies ###################################
 #for i in range(no_studies-3, no_studies-2):
-for i in range(no_studies):
+#for i in range(no_studies):
+for i in range(2,no_studies):
     current_study_name = study_ID[i]
     #if current_study_name.find('MR')!= -1:
     current_study_frame = study_frame[i]
