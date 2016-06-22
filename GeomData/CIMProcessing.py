@@ -38,6 +38,7 @@ def createSurfacePoints(current_study_name, current_study_frame):
     os.system('rm *.*')
     ## Get the current directory
     dst = os.getcwd()
+    
     ## Change to the folder where CMISS ipnode files are stored
     CIMModels_directory = ('../../CIM_Models/Studies/'+current_study_name+'/model_ipnode/')
     os.chdir(CIMModels_directory)
@@ -51,12 +52,12 @@ def createSurfacePoints(current_study_name, current_study_frame):
         filename, ext = os.path.splitext(file)
         if '_RC_Cubic' in filename:
             if ext == '.ipnode':
-                a = re.findall(r'\d+', filename)[1]
+                a = re.findall(r'\d+', filename)[-1]
                 dstfilename = dst + '/' + current_study_name + '_' + str(a) + '.ipnode'
                 copy(file, dstfilename)
                 numIpnode += 1
             elif ext == '.ipelem':
-                a = re.findall(r'\d+', filename)[1]
+                a = re.findall(r'\d+', filename)[-1]
                 dstfilename = dst + '/' + current_study_name + '_' + str(a) + '.ipelem'
                 copy(file, dstfilename)
                 numIpelem += 1
@@ -64,7 +65,6 @@ def createSurfacePoints(current_study_name, current_study_frame):
     ############## Step 2: Sort into Diastole and Systole folders #################
 
     ################## Active Frames #####################
-
     os.chdir(dst)
     if not os.path.exists('Active'):
         os.mkdir('Active')
@@ -227,7 +227,7 @@ os.dup2(se.fileno(), sys.stderr.fileno())
 os.system('rm *.*~')
 
 ## Extract the important frame numbers for all studies
-file = open(os.environ['PARAM_ESTIMATION'] + 'NYStFranFrameNumber.txt', 'r')
+file = open(os.environ['PARAM_ESTIMATION'] + '/StudyNames.txt', 'r')
 
 study_ID = []
 study_frame_tmp = scipy.zeros((0, 3), int)
@@ -250,17 +250,17 @@ print '      The total number of studies is', no_studies
 print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 
 ######################### Process all studies ###################################
-for i in range(no_studies-3, no_studies-2):
-#for i in range(no_studies):
+#for i in range(no_studies-3, no_studies-2):
+for i in range(no_studies):
     current_study_name = study_ID[i]
-    if current_study_name.find('MR')!= -1:
-	    current_study_frame = study_frame[i]
-	    print
-	    print ''
-	    print '*****************************************************************'
-	    print '          Current Study Name is ', current_study_name
-	    print '*****************************************************************'
-	    print ''
+    #if current_study_name.find('MR')!= -1:
+    current_study_frame = study_frame[i]
+    print
+    print ''
+    print '*****************************************************************'
+    print '          Current Study Name is ', current_study_name
+    print '*****************************************************************'
+    print ''
 
-	    createSurfacePoints(current_study_name, current_study_frame)
+    createSurfacePoints(current_study_name, current_study_frame)
 
