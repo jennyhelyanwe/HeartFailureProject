@@ -283,3 +283,151 @@ def passive_displacement_mse(study_id, study_frame):
         f.write('Total average MSE over all frames:\n')
         f.write(str(sum_mse))
 
+
+def passive_identifiability_evaluate(study_id, study_frame):
+    # This function evaluates the sensitivity to the TCa parameter at each frame by perturbing the TCa parameter
+    # and evaluating the 1st and 2nd derivatives for the resulting fitting error.
+    print 'LOG: Evaluating C1 identifiability (2nd derivative of objective function)...'
+    os.chdir(os.environ['STUDIES'] + study_id + '/LVMechanics' + study_id + '/PassiveMechanics')
+    f = open('StiffnessIdentifiability.txt', 'w')
+    f.write('C1\t1st_d\t2nd_d\tmse(x+2h)\tmse(x+h)\tmse(x)\tmse(x-h)\tmse(x-2h)\n')
+    copy(os.environ['RESULTS'] + study_id + '/LV_CubicGuc_Optimised.ipmate', 'LV_CubicGuc_Opt.ipmate')
+
+    copy('LV_CubicGuc_Opt.ipmate', 'LV_CubicGuc.ipmate')
+    C1_opt = material_get('LV_CubicGuc.ipmate')
+    C1 = C1_opt
+    print C1
+    eps = 0.1
+    h = numpy.array([eps*2, eps, -eps, -eps*2, 0.0])  # Evaluate opt C1 last so that the folders are restored to opt state.
+    assert isinstance(C1, object)
+    test = h + C1
+    print test
+    C1 = [test[0], test[1], test[4], test[2], test[3]]  # Re-order for derivative calculations.
+    print 'C1 values evaluated are: \n', str(C1)
+    time.sleep(10)
+    if min(test) > 0:
+        mse = [0, 0, 0, 0, 0]  # Space holder mse values.
+        for j in range(0, len(h)):
+            # 1. Update current C1 estimate in ipmate file.
+            copy('LV_CubicGuc.ipmate', 'LV_CubicGuc_previous.ipmate')
+            material_create_ipmate(test[j], 'LV_CubicGuc_TEMPLATE.ipmate', 'LV_CubicGuc.ipmate')
+
+            # 2. Re-run simulation using current C1 estimate and get new model predictions for
+            # each frame from DS+1 to ED.
+            idx = passive_loop_index(study_frame)
+            for i in range(1, len(idx)):
+                # Solve warm start using new C1 guess - using non-registration of surface data.
+                passive_warm_solve(study_id, str(idx[i]))
+
+            # 3. Evaluate MSE of fitting and sum for all frames from DS+1 to ED.
+            mse_ = []
+            for i in range(1, len(idx)):
+                # Vector error value
+                info = open('OptimisedError/EpiError_' + str(idx[i]) + '.opdata').read()
+                array_ = re.split(r'[\n\\]', info)
+                temp = array_[3].split()
+                num_epi = float(temp[len(temp) - 1])
+                temp = array_[7].split()
+                epi_rmse = float(temp[len(temp) - 1])
+
+                info = open('OptimisedError/EndoError_' + str(idx[i]) + '.opdata').read()
+                array_ = re.split(r'[\n\\]', info)
+                temp = array_[3].split()
+                num_endo = float(temp[len(temp) - 1])
+                temp = array_[7].split()
+                endo_rmse = float(temp[len(temp) - 1])
+
+                mse_.append((epi_rmse ** 2 * num_epi + endo_rmse ** 2 * num_endo) / (num_endo + num_epi))
+                print '\033[0;30;45m LOG: Current MSE for frame ' + str(idx[i]) + ' = ' + str(mse_[i - 1]) + '\033[0m\n'
+            mse_tot = 0
+            for i in range(1, len(idx)):
+                mse_tot = mse_tot + mse_[i - 1]
+            print 'LOG: Current total MSE for diastole = ' + str(mse_tot) + '\n'
+            mse[j] = mse_tot
+        mse = [mse[0], mse[1], mse[4], mse[2], mse[3]]  # Re-order for derivative calculations.
+        C1 = [test[0], test[1], test[4], test[2], test[3]]  # Re-order for derivative calculations.
+        print 'C1 values evaluated are: ', str(C1)
+        # Get 1st derivative value
+        dError = 0.5 * (mse[1] - mse[3])/h[1]
+        print 'First derivative at optimised C1: ', str(dError)
+        d2Error = 1 / (12 * h[1] * h[1]) * (-mse[0] + 16 * mse[1] - 30 * mse[2] + 16 * mse[3] - mse[4])
+        print 'Second derivative at optimised C1: ', str(d2Error)
+        f.write(
+            str(C1_opt) + '\t' + str(dError) + '\t' + str(d2Error) + '\t' + str(mse[0]) + '\t' + str(mse[1]) + '\t' +
+            str(mse[2]) + '\t' + str(mse[3]) + '\t' + str(mse[4]) + '\n')
+        print mse
+    else:
+        print 'LOG: C1 value too low to evaluate derivatives for. '
+    copy('LV_CubicGuc_Opt.ipmate', 'LV_CubicGuc.ipmate')
+    f.close()
+    print 'LOG: Finished sensitivity analysis.'
+
+
+def passive_parameter_sweep(study_id, study_frame):
+    print 'LOG: Doing parameter sweep for C1 parameter...'
+    os.chdir(os.environ['STUDIES'] + study_id + '/LVMechanics' + study_id + '/PassiveMechanics')
+    f = open('ParameterSweep.txt', 'w+')
+    idx = passive_loop_index(study_frame)
+    header = ["C1(kPa)"]
+    for i in range(1, len(idx)):
+        header = [str(header[0]) + "\tFrame " + str(idx[i])]
+    header = [str(header[0]) + "\tTotal mse (mm^2)\n"]
+
+
+    copy(os.environ['RESULTS'] + study_id + '/LV_CubicGuc_Optimised.ipmate', 'LV_CubicGuc_Opt.ipmate')
+
+    copy('LV_CubicGuc_Opt.ipmate', 'LV_CubicGuc.ipmate')
+    C1_opt = material_get('LV_CubicGuc.ipmate')
+    f.write(str(header[0]))
+    # C1_sweep = [C1_opt, 0.8, 0.9, 1.0, C1_opt]
+    start = numpy.floor(C1_opt)
+    if start < 1:
+        start = 1
+    #start = numpy.ceil(C1_opt)
+    C1_sweep = numpy.linspace(start, 10, (10-start+1))
+    #C1_sweep = numpy.insert(C1_sweep, 0, [start - 0.2])
+    C1_sweep = numpy.append(C1_sweep, C1_opt)
+    #C1_sweep = [start-0.5, start-0.2, C1_sweep, C1_opt]
+    #C1_sweep = [C1_opt-0.1] +  C1_sweep +  [C1_opt]
+    for i in range(0, len(C1_sweep)):
+        # 1. Update current C1 estimate in ipmate file.
+        copy('LV_CubicGuc.ipmate', 'LV_CubicGuc_previous.ipmate')
+        material_create_ipmate(C1_sweep[i], 'LV_CubicGuc_TEMPLATE.ipmate', 'LV_CubicGuc.ipmate')
+
+        for j in range(1, len(idx)):
+            print C1_sweep
+            print 'LOG: Evaluating C1 as ', str(C1_sweep[i]), ' for frame ', str(idx[j])
+            time.sleep(5)
+            # Solve warm start using new C1 guess - using non-registration of surface data.
+            passive_warm_solve(study_id, str(idx[j]))
+        # 3. Evaluate MSE of fitting and sum for all frames from DS+1 to ED.
+        mse_ = []
+        for j in range(1, len(idx)):
+            # Vector error value
+            info = open('OptimisedError/EpiError_' + str(idx[j]) + '.opdata').read()
+            array_ = re.split(r'[\n\\]', info)
+            temp = array_[3].split()
+            num_epi = float(temp[len(temp) - 1])
+            temp = array_[7].split()
+            epi_rmse = float(temp[len(temp) - 1])
+
+            info = open('OptimisedError/EndoError_' + str(idx[j]) + '.opdata').read()
+            array_ = re.split(r'[\n\\]', info)
+            temp = array_[3].split()
+            num_endo = float(temp[len(temp) - 1])
+            temp = array_[7].split()
+            endo_rmse = float(temp[len(temp) - 1])
+
+            mse_.append((epi_rmse ** 2 * num_epi + endo_rmse ** 2 * num_endo) / (num_endo + num_epi))
+            print '\033[0;30;45m LOG: Current MSE for frame ' + str(idx[j]) + ' = ' + str(mse_[j - 1]) + '\033[0m\n'
+        mse_tot = 0
+        line = [str(C1_sweep[i])]
+        for j in range(1, len(idx)):
+            mse_tot = mse_tot + mse_[j - 1]
+            line = [str(line[0]) + "\t" + str(mse_[j - 1])]
+        line = [str(line[0]) + "\t" + str(mse_tot) + "\n"]
+        f.write(str(line[0]))
+        print 'LOG: Current total MSE for diastole = ' + str(mse_tot) + '\n'
+
+    print 'LOG: Finished parameter sweep on C1'
+    f.close()
