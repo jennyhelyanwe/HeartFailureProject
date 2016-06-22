@@ -373,12 +373,12 @@ def passive_parameter_sweep(study_id, study_frame):
         header = [str(header[0]) + "\tFrame " + str(idx[i])]
     header = [str(header[0]) + "\tTotal mse (mm^2)\n"]
 
+    """
+    #copy(os.environ['RESULTS'] + study_id + '/LV_CubicGuc_Optimised.ipmate', 'LV_CubicGuc_Opt.ipmate')
 
-    copy(os.environ['RESULTS'] + study_id + '/LV_CubicGuc_Optimised.ipmate', 'LV_CubicGuc_Opt.ipmate')
-
-    copy('LV_CubicGuc_Opt.ipmate', 'LV_CubicGuc.ipmate')
-    C1_opt = material_get('LV_CubicGuc.ipmate')
-    f.write(str(header[0]))
+    #copy('LV_CubicGuc_Opt.ipmate', 'LV_CubicGuc.ipmate')
+    #C1_opt = material_get('LV_CubicGuc.ipmate')
+    #f.write(str(header[0]))
     # C1_sweep = [C1_opt, 0.8, 0.9, 1.0, C1_opt]
     start = numpy.floor(C1_opt)
     if start < 1:
@@ -389,6 +389,9 @@ def passive_parameter_sweep(study_id, study_frame):
     C1_sweep = numpy.append(C1_sweep, C1_opt)
     #C1_sweep = [start-0.5, start-0.2, C1_sweep, C1_opt]
     #C1_sweep = [C1_opt-0.1] +  C1_sweep +  [C1_opt]
+    """
+    C1_sweep = numpy.linspace(1, 8, 15)
+    C1_sweep = numpy.append([0.8], C1_sweep)
     for i in range(0, len(C1_sweep)):
         # 1. Update current C1 estimate in ipmate file.
         copy('LV_CubicGuc.ipmate', 'LV_CubicGuc_previous.ipmate')

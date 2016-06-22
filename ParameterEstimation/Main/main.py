@@ -67,10 +67,10 @@ def main_program(study_id, study_frame, debug_toggle, forward_solve_toggle, a_p_
     ## 4. Run parameter estimation:
     if a_p_toggle == 1:
         # Passive parameter estimation only.
-        optimise_passive_main(study_id, study_frame, pressure, data_idx, forward_solve_toggle)
         passive_displacement_mse(study_id, study_frame)
-        passive_identifiability_evaluate(study_id, study_frame)
         passive_parameter_sweep(study_id, study_frame)
+        optimise_passive_main(study_id, study_frame, pressure, data_idx, forward_solve_toggle)
+        passive_identifiability_evaluate(study_id, study_frame)
     elif a_p_toggle == 2:
         # Active parameter estimation only.
         optimise_active_main(study_id, study_frame, pressure, data_idx)
