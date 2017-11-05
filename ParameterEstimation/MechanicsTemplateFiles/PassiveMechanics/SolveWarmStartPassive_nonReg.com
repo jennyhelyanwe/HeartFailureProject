@@ -18,8 +18,8 @@ print "\nPrevious C1 is ".${C1_previous}."\n"
 print "C1 goal is ".${C1_current}."\n"
 $C1_incr = $C1_current - $C1_previous;
 
-print "\n \033[0;30;42m ================================================================================== \033[0m\n";
-print "\033[0;30;42m       Solving iteratively from c1 = $C1_previous to reach c1 = $C1_current    	\033[0m\n";
+print "\n\033[0;30;42m ================================================================================== \033[0m\n";
+print "\033[0;30;42m       Solving iteratively from c1 = $C1_previous to reach c1 = $C1_current   \033[0m\n";
 print "\033[0;30;42m ================================================================================== \033[0m\n";
 
 $no_steps = ceil(abs($C1_incr)/1.0)
@@ -67,6 +67,8 @@ fem update gauss strain extension_ratios region $WALL;
 fem export gauss;${FILE}."_gauss_ER" yg as gauss_strain region $WALL;
 fem update gauss strain region $WALL;
 fem export gauss;${FILE}."_gauss_strain" yg as gauss_strain region $WALL;
+fem update gauss strain wall region $WALL;
+fem export gauss;${FILE}."_gauss_strain_wall" yg as gauss_strain region $WALL;
 fem update gauss stress total cauchy region $WALL;
 fem export gauss;${FILE}."_gauss_stress" yg as gauss_stress region $WALL;
 fem update gauss stress passive cauchy region $WALL;

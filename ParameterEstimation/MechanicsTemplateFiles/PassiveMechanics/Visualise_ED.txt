@@ -1,0 +1,38 @@
+gfx create spectrum strain;
+gfx modify spectrum strain clear overwrite_colour;
+gfx modify spectrum strain linear reverse range 0.9259 1.08 extend_above extend_below rainbow colour_range 0 1 component 1;
+gfx create spectrum stress;
+gfx modify spectrum stress clear overwrite_colour;
+gfx modify spectrum stress linear reverse range -0.3 2 extend_above extend_below rainbow colour_range 0 1 component 1;
+
+# Read in model
+
+gfx read node OptimisedExfile/LVInflation_1 
+gfx read elem OptimisedExfile/LVInflation_1 
+
+# Read in stress data
+
+gfx read data OptimisedStressStrain/PassiveStress_1 
+
+#gfx read data OptimisedStressStrain/Strain_1 region model
+
+gfx def field embedded_coordinates embedded element_xi element_xi field deformed
+
+gfx modify g_element "/" general clear;
+gfx modify g_element "/" lines domain_mesh1d coordinate deformed tessellation default LOCAL line line_base_size 0 select_on material default selected_material default_selected render_shaded;
+gfx modify g_element "/" surfaces domain_mesh2d coordinate deformed exterior face xi3_0 tessellation default LOCAL select_on material default selected_material default_selected render_shaded;
+gfx modify g_element "/" points domain_datapoints coordinate embedded_coordinates tessellation default_points LOCAL glyph sphere size "1*1*1" offset 0,0,0 font default select_on material default data yg1 spectrum stress selected_material default_selected render_shaded;
+gfx modify g_element "/" general clear;
+gfx modify g_element "/" lines domain_mesh1d coordinate deformed tessellation default LOCAL circle_extrusion line_base_size 0.4 select_on material muscle selected_material default_selected render_shaded;
+gfx modify g_element "/" surfaces domain_mesh2d coordinate deformed exterior face xi3_0 tessellation default LOCAL select_on material black selected_material default_selected render_shaded;
+gfx modify g_element "/" points domain_datapoints coordinate embedded_coordinates tessellation default_points LOCAL glyph sphere size "3*3*3" offset 0,0,0 font default select_on material default data yg1 spectrum stress selected_material default_selected render_shaded;
+
+gfx create window 1 double_buffer;
+gfx modify window 1 image scene default light_model default;
+gfx modify window 1 image add_light default;
+gfx modify window 1 layout simple ortho_axes z -y eye_spacing 0.25 width 512 height 512;
+gfx modify window 1 set current_pane 1;
+gfx modify window 1 background colour 0 0 0 texture none;
+gfx modify window 1 view parallel eye_point -4.68589 -35.2013 -185.339 interest_point 13.8476 -3.02572 -2.17461 up_vector -0.976883 -0.170608 0.128816 view_angle 40 near_clipping_plane 1.8689 far_clipping_plane 667.88 relative_viewport ndc_placement -1 1 2 2 viewport_coordinates 0 0 1 1;
+gfx modify window 1 set transform_tool current_pane 1 std_view_angle 40 normal_lines no_antialias depth_of_field 0.0 fast_transparency blend_normal;
+

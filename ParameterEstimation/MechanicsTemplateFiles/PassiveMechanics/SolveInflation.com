@@ -2,19 +2,19 @@ use POSIX;
 ################################# Solve Passive Inflation ################
 
 set echo;
-	#==================================================================================================
+#==================================================================================================
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
 print "\033[0;30;42m                  Initial Conditions                          \033[0m\n"; 
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
-	#==================================================================================================
+#==================================================================================================
 
 fem define initial;r;LV_CubicPreEpiBase region $WALL;
 
-	#==================================================================================================
+#==================================================================================================
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
 print "\033[0;30;42m                    Solution Method                           \033[0m\n"; 
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
-	#==================================================================================================
+#==================================================================================================
 
 
 fem define mapping;r;LV_CubicMapAll region $WALL;
@@ -30,11 +30,11 @@ fem list elements;output_cavity_volume/LVCavityInit total region $LV_CAVITY; # A
 $LV_CAVITY_VOLUME=`awk '\$1=="Total"{printf("%f",\$4);exit}\' output_cavity_volume/LVCavityInit.opelem`; 
 print "\n\033[0;30;42mDS LV cavity volume = ${LV_CAVITY_VOLUME}\033[0m\n";
 
-#==========================================================================================================
+#====================================================================================================
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
 print "\033[0;30;42m                       Solve Inflation                        \033[0m\n"; 
 print "\033[0;30;42m ============================================================ \033[0m\n"; 
-#===================================================================================
+#====================================================================================================
 print "\033[0;30;46m Increase cavity pressures incrementally to simulate diastole \033[0m\n"; 
 
    	
@@ -56,27 +56,34 @@ $Start_DS=`sed -e s%D%E% LV_CubicPreEpiBase.ipinit | awk -v line=16 'NR==line{pr
 if ($Start_DS==1)
 {
 	$LV_P=`sed -e s%D%E% LV_CubicPreEpiBase.ipinit | awk -v line=360 'NR==line{printf("%.5f",\$5)}'`;
+	$x_displacement=`sed -e s%D%E% LV_CubicPreEpiBase.ipinit | awk -v line=80 'NR==line{printf("%.5f",\$5)}'`;
 } else {
 	$LV_P=`sed -e s%D%E% LV_CubicPreEpiBase.ipinit | awk -v line=531 'NR==line{printf("%.5f",\$5)}'`;
+	$x_displacement=`sed -e s%D%E% LV_CubicPreEpiBase.ipinit | awk -v line=137 'NR==line{printf("%.5f",\$5)}'`;
 }
-print "\033[0;30;45m Applying additional pressure = $LV_P   \033[0m\n";
-
-$MAXIMUM_INCREM = ceil(abs($LV_P)/0.05)
+print "\n\033[0;30;45m Applying additional pressure = $LV_P   \033[0m\n";
+print "\n\033[0;30;45m Applying x displacement of node 31 of $x_displacement   \033[0m\n";
+$MAXIMUM_INCREM = ceil(abs($LV_P)/0.1)
 if ($MAXIMUM_INCREM==0.0)
 {
 	$MAXIMUM_INCREM= 1
 }
 
-if ($MAXIMUM_INCREM==1)
-{
-    $MAXIMUM_INCREM=2
-}
+#if ($MAXIMUM_INCREM==1)
+#{
+#    $MAXIMUM_INCREM=2
+#}
 
 if ($LV_P < 0)
 {
 	$MAXIMUM_INCREM = $MAXIMUM_INCREM + 1
 }
+$ALTERNATIVE_INCREM = ceil(abs($x_displacement)/0.2)
 
+if ($ALTERNATIVE_INCREM > $MAXIMUM_INCREM)
+{
+	$MAXIMUM_INCREM = $ALTERNATIVE_INCREM
+}
 print "\033[0;30;42mThis is going to take ".$MAXIMUM_INCREM." load step(s).\033[0m\n"
 $INCREM = 1/$MAXIMUM_INCREM;
 $p_increm = $INCREM*$LV_P
@@ -112,6 +119,8 @@ for $i ( 1..$MAXIMUM_INCREM )
 	fem export gauss;${FILE}."_gauss_ER" yg as gauss_strain region $WALL;
 	fem update gauss strain region $WALL;
 	fem export gauss;${FILE}."_gauss_strain" yg as gauss_strain region $WALL;
+	fem update gauss strain wall region $WALL;
+	fem export gauss;${FILE}."_gauss_strain_wall" yg as gauss_strain region $WALL;
 	fem update gauss stress total cauchy region $WALL;
 	fem export gauss;${FILE}."_gauss_stress" yg as gauss_stress region $WALL;
 	fem update gauss stress passive cauchy region $WALL;
@@ -135,6 +144,8 @@ fem update gauss strain extension_ratios region $WALL;
 fem export gauss;${output}."LVInflation"."_gauss_ER" yg as gauss_strain region $WALL;
 fem update gauss strain region $WALL;
 fem export gauss;${output}."LVInflation"."_gauss_strain" yg as gauss_strain region $WALL;
+fem update gauss strain wall region $WALL;
+fem export gauss;${FILE}."_gauss_strain_wall" yg as gauss_strain region $WALL;
 fem update gauss stress total cauchy region $WALL;
 fem export gauss;${output}."LVInflation"."_gauss_stress" yg as gauss_stress region $WALL;
 fem update gauss stress passive cauchy region $WALL;

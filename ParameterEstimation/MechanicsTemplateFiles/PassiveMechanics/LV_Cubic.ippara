@@ -46,17 +46,17 @@
  Max# dimension of GM           (NZ_GM_M)[1]:    2025000
  Max# dimension of GMM         (NZ_GMM_M)[1]:    2025000
  Max# dimension of GQ           (NZ_GQ_M)[1]:    202500
- Max# dimension of ISC_GD      (NISC_GDM)[1]:    220250
+ Max# dimension of ISC_GD      (NISC_GDM)[1]:    5000000
  Max# dimension of ISR_GD      (NISR_GDM)[1]:       5451
- Max# dimension of ISC_GK      (NISC_GKM)[1]:    220250
+ Max# dimension of ISC_GK      (NISC_GKM)[1]:    5000000
  Max# dimension of ISR_GK      (NISR_GKM)[1]:       5451
- Max# dimension of ISC_GKK    (NISC_GKKM)[1]:    220250
- Max# dimension of ISR_GKK    (NISR_GKKM)[1]:       5451
- Max# dimension of ISC_GM      (NISC_GMM)[1]:    220250
+ Max# dimension of ISC_GKK    (NISC_GKKM)[1]:   5000000
+ Max# dimension of ISR_GKK    (NISR_GKKM)[1]:   5000000
+ Max# dimension of ISC_GM      (NISC_GMM)[1]:   5000000
  Max# dimension of ISR_GM      (NISR_GMM)[1]:       5451
- Max# dimension of ISC_GMM    (NISC_GMMM)[1]:    220250
+ Max# dimension of ISC_GMM    (NISC_GMMM)[1]:    5000000
  Max# dimension of ISR_GMM    (NISR_GMMM)[1]:       5451
- Max# dimension of ISC_GQ      (NISC_GQM)[1]:    220250
+ Max# dimension of ISC_GQ      (NISC_GQM)[1]:    5000000
  Max# dimension of ISR_GQ      (NISR_GQM)[1]:       5451
  Max# size of Minos arrays    (NZ_MINOSM)[1]:      2625
  Max# basis function families      (NBFM)[1]:        13

@@ -14,11 +14,14 @@ fem export data;${error}."ED_Epi" as ED_Epi region $WALL;
 ## Project ED Epi data to epi surface first
 fem group faces 5,9,13,16,21,25,29,32,37,41,45,48,53,57,61,64 as EPI region $WALL;
 fem def xi;c closest_face faces EPI search_start 20 region $WALL;
-	
+
 ## List the projection error
 fem list data;${error}."EpiProjectionToED" error
 fem export data;${error}."EpiProjectionToED" as EpiProjectionToED error region $WALL;
-	
+fem def xi;w;${error}."ProjectionXiEpi" region $WALL;
+
+fem def xi;c contain region $WALL;
+fem def xi;w;${error}."ContainXiEpi" region $WALL;	
 	
 ##################################### Endo ##############################
 # Define the undata (landmark points)
@@ -32,8 +35,12 @@ fem export data;${error}."ED_Endo" as ED_Endo region $WALL;
 fem group faces 4,8,12,15,20,24,28,31,36,40,44,47,52,56,60,63 as ENDO region $WALL;
 	
 fem def xi;c closest_face faces ENDO search_start 20  region $WALL;
+
 	
 ## List the projection error
 fem list data;${error}."EndoProjectionToED" error
 fem export data;${error}."EndoProjectionToED" as EndoProjectionToED error region $WALL;
+fem def xi;w;${error}."ProjectionXiEndo" region $WALL;
 
+fem def xi;c contain region $WALL;
+fem def xi;w;${error}."ContainXiEndo" region $WALL;	
