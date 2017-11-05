@@ -3,7 +3,7 @@ __author__ = 'zwan145'
 import os
 from shutil import copy
 
-#This python script contains functions which set up the mechanical simulation.
+# This python script contains functions which set up the mechanical simulation.
 
 
 def mech_template_setup(study_id):
@@ -20,9 +20,6 @@ def mech_template_setup(study_id):
     dir_work = os.environ['STUDIES']+study_id+'/LVMechanics'+study_id+'/ActiveMechanics/'
     for f in all_f:
         copy(f, dir_work)
-#
-#=======================================================================================================================
-#
 
 
 def mech_output_setup(dr, active_toggle):
@@ -61,6 +58,3 @@ def mech_output_setup(dr, active_toggle):
             os.mkdir('ForwardSolveActivation')  # Stores ipacti file for initial forward solve.
         if not os.path.exists('OptimisedActivation'):
             os.mkdir('OptimisedActivation')  # Stores ipacti file during optimisation. Final optimised file is here.
-#
-#=======================================================================================================================
-#

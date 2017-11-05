@@ -18,6 +18,8 @@ from util_transform import transformRigid3D, transformScale3D, transformRigidSiz
 # ======================================================================#
 # correspondent data fitting										   #
 #======================================================================#
+
+
 def fitTranslation(data, target, xtol=1e-5, maxfev=0, verbose=0):
     """ fits for tx,ty for transforms points in data to points
     in target. Points in data and target are assumed to correspond by
@@ -26,7 +28,7 @@ def fitTranslation(data, target, xtol=1e-5, maxfev=0, verbose=0):
 
     def obj(x):
         dataT = data + x
-        d = ( ( dataT - target ) ** 2.0 ).sum(1)
+        d = ((dataT - target) ** 2.0).sum(1)
         return d
 
     x0 = scipy.array([0.0, 0.0, 0.0])

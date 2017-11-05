@@ -13,9 +13,6 @@ def setup_log_file(study_id, log_name):
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
     os.dup2(so.fileno(), sys.stdout.fileno())
     os.dup2(se.fileno(), sys.stderr.fileno())
-#
-#=======================================================================================================================
-#
 
 
 def setup_dir(study_id):
@@ -32,38 +29,34 @@ def setup_dir(study_id):
     results_dir = os.environ['RESULTS']+study_id
     if not os.path.exists(results_dir):
         os.mkdir(results_dir)
-#
-#=======================================================================================================================
-#
 
 
 def setup_get_frames(idx):
     # This function gets the specified study ID and important frame numbers.
-    filename = os.environ['PARAM_ESTIMATION'] + '/StudyNames.txt'
+    filename = os.environ['PARAM_ESTIMATION'] + '/NYStFranFrameNumber_UsedForAnalysis.txt'
     f = open(filename, 'r')
 
     study_ids = []
     study_frames = []
+    c1_inits = []
     study_info = f.readline()
     while len(study_info) != 0:  # Reaching the end of the file
         study_ids.append(study_info.split()[0])
         study_frames.append(study_info.split()[1:5])
+        c1_inits.append(study_info.split()[5])
         study_info = f.readline()
         num_studies = len(study_ids)
 
-    print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-    print '      The total number of studies is', num_studies
-    print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-
     study_id = study_ids[idx]
     study_frame = study_frames[idx]
+    c1_init = float(c1_inits[idx])
 
-    return study_id, study_frame
-#
-#=======================================================================================================================
-#
+    return study_id, study_frame, c1_init
 
-
-
-
-
+def setup_get_results(idx):
+    filename = os.environ['PARAM_ESTIMATION'] + '/NYStFran_Results.txt'
+    f = open(filename, 'r')
+    data = f.readlines()
+    c1_opt = float(data[idx].split()[1])
+    opt_val = float(data[idx].split()[2])
+    return c1_opt, opt_val

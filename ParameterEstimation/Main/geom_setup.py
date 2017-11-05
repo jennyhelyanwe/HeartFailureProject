@@ -32,9 +32,6 @@ def geom_setup_ref_cavity(study_id, study_frame):
 
     # Export wall and cavity models for visualisation
     os.system('cm LVHumanDSModel.com')
-#
-#=======================================================================================================================
-#
 
 
 def geom_setup_data(study_id, study_frame):
@@ -66,9 +63,6 @@ def geom_setup_data(study_id, study_frame):
     dir_from = os.environ['GEOM_DATA']+study_id+'/Active/'
     copy(dir_from+study_id+'_Surface_Points_Endo_'+str(es)+'.ipdata', dir_to_a+'/Surface_Points_Endo_ES.ipdata')
     copy(dir_from+study_id+'_Surface_Points_Epi_'+str(es)+'.ipdata', dir_to_a+'/Surface_Points_Epi_ES.ipdata')
-#
-#=======================================================================================================================
-#
 
 
 def create_cavity_model(file_name_wall, file_name_cavity):
@@ -82,60 +76,60 @@ def create_cavity_model(file_name_wall, file_name_cavity):
 
     no_line = 0
     data = file_wall.readline()
-    no_line = no_line + 1
+    no_line += 1
 
-    ## Initialise a variable to store the x coordinates of the basal nodes
+    # Initialise a variable to store the x coordinates of the basal nodes
     x_coor_base = []
     x_coor_apex = []
     y_coor_base = []
     z_coor_base = []
 
-    while (no_line <= 588):  ## Line 588 is the end of node 17
-        if (no_line == 16):  ## x-coordinate of Node 1
+    while no_line <= 588:  # Line 588 is the end of node 17
+        if no_line == 16:  # x-coordinate of Node 1
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             x_coor_apex.append(float(data_coor))
-        elif (no_line == 476):  ## x-coordinate of Node 14
+        elif no_line == 476:  # x-coordinate of Node 14
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             x_coor_base.append(float(data_coor))
-        elif (no_line == 485):  ## y-coordinate of Node 14
+        elif no_line == 485:  # y-coordinate of Node 14
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             y_coor_base.append(float(data_coor))
-        elif (no_line == 505):  ## x-coordinate of Node 15
+        elif no_line == 505:  # x-coordinate of Node 15
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             x_coor_base.append(float(data_coor))
-        elif (no_line == 523):  ## z-coordinate of Node 15
+        elif no_line == 523:  # z-coordinate of Node 15
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             z_coor_base.append(float(data_coor))
-        elif (no_line == 534):  ## x-coordinates of Node 16
+        elif no_line == 534:  # x-coordinates of Node 16
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             x_coor_base.append(float(data_coor))
-        elif (no_line == 543):  ## y-coordinate of Node 16
+        elif no_line == 543:  # y-coordinate of Node 16
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             y_coor_base.append(float(data_coor))
-        elif (no_line == 563):  ## x-coordinate of Node 17
+        elif no_line == 563:  # x-coordinate of Node 17
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             x_coor_base.append(float(data_coor))
-        elif (no_line == 581):  ## z-coordinate of Node 17
+        elif no_line == 581:  # z-coordinate of Node 17
             data_coor_tmp = data.split()
             data_coor = data_coor_tmp[len(data_coor_tmp) - 1]
             z_coor_base.append(float(data_coor))
 
-        if (no_line == 4):
+        if no_line == 4:
             string = ' The number of nodes is [    21]:     21\n'
         else:
             string = data
 
         file_cavity.write(str(string))
         data = file_wall.readline()
-        no_line = no_line + 1
+        no_line += 1
 
     file_wall.close()
     x_coor_apex = array(x_coor_apex)
@@ -146,7 +140,7 @@ def create_cavity_model(file_name_wall, file_name_cavity):
     print 'The x-coordinates of the base is ', x_coor_base
     print 'The y-coordinates of the base is ', y_coor_base
     print 'The z-coordinates of the base is ', z_coor_base
-    ## Calculate the mean coordinate of the basal node
+    # Calculate the mean coordinate of the basal node
     x_coor_mean = scipy.mean(x_coor_base)
     y_coor_mean = scipy.mean(y_coor_base)
     z_coor_mean = scipy.mean(z_coor_base)
@@ -154,10 +148,10 @@ def create_cavity_model(file_name_wall, file_name_cavity):
     print 'The mean y-coordinate of the base is ', float(y_coor_mean)
     print 'The mean z-coordinate of the base is ', float(z_coor_mean)
 
-    ## Calculate the base-to-apex dimension
+    # Calculate the base-to-apex dimension
     base_apex_dimen = x_coor_apex - x_coor_mean
     print 'The Base-To-Apex dimension is ', float(base_apex_dimen)
-    ### Calculate the coordinates of other nodes in the cavity
+    # Calculate the coordinates of other nodes in the cavity
     x_coor_118 = float(x_coor_apex - 4 * base_apex_dimen / 4)
     x_coor_119 = float(x_coor_apex - 3 * base_apex_dimen / 4)
     x_coor_120 = float(x_coor_apex - 2 * base_apex_dimen / 4)
@@ -166,8 +160,7 @@ def create_cavity_model(file_name_wall, file_name_cavity):
     print 'The x-coordinate of node 119 is ', x_coor_119
     print 'The x-coordinate of node 120 is ', x_coor_120
     print 'The x-coordinate of node 121 is ', x_coor_121
-
-    ## Add these information to the cavity ipnode file
+    # Add these information to the cavity ipnode file
     string = ' \n'
     file_cavity.write(str(string))
     string = ' Node number [  118]:   118\n'
@@ -1288,10 +1281,6 @@ def create_cavity_model(file_name_wall, file_name_cavity):
     file_cavity.write(str(string))
     string = ' The derivative wrt directions 1, 2 & 3 is [ 0.00000E+00]:                         0\n'
     file_cavity.write(str(string))
-
     file_cavity.close()
 
     return
-#
-#=======================================================================================================================
-#
