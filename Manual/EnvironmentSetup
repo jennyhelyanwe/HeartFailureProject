@@ -1,0 +1,12 @@
+export HEART_FAILURE_ROOT=/hpc/zwan145/Collaborations/For_Delphine/LVSimulationSingleFrame # Edit this line only. 
+export PARAM_ESTIMATION=$HEART_FAILURE_ROOT/ParameterEstimation
+export HAEMO_DATA=$HEART_FAILURE_ROOT/HaemoData/RegisteredPressure/
+export CIM_MODELS=$HEART_FAILURE_ROOT/CIM_Models/
+export GEOM_DATA=$HEART_FAILURE_ROOT/GeomData/
+export STUDIES=$PARAM_ESTIMATION/Studies/
+export RESULTS=$PARAM_ESTIMATION/Results/
+export MAIN=$PARAM_ESTIMATION/Main/
+export GEOM_TEMPLATE=$PARAM_ESTIMATION/GeometricModelTemplateFiles/
+export MECH_TEMPLATE=$PARAM_ESTIMATION/MechanicsTemplateFiles/
+export GEOM_TEMPLATE=$PARAM_ESTIMATION/GeometricModelTemplateFiles/
+export MECH_TEMPLATE=$PARAM_ESTIMATION/MechanicsTemplateFiles/

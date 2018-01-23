@@ -33,7 +33,7 @@ def setup_dir(study_id):
 
 def setup_get_frames(idx):
     # This function gets the specified study ID and important frame numbers.
-    filename = os.environ['PARAM_ESTIMATION'] + '/NYStFranFrameNumber_UsedForAnalysis.txt'
+    filename = os.environ['PARAM_ESTIMATION'] + '/StudyNames.txt'
     f = open(filename, 'r')
 
     study_ids = []
@@ -54,7 +54,7 @@ def setup_get_frames(idx):
     return study_id, study_frame, c1_init
 
 def setup_get_results(idx):
-    filename = os.environ['PARAM_ESTIMATION'] + '/NYStFran_Results.txt'
+    filename = os.environ['PARAM_ESTIMATION'] + '/StudyResults.txt'
     f = open(filename, 'r')
     data = f.readlines()
     c1_opt = float(data[idx].split()[1])
